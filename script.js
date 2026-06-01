@@ -183,4 +183,76 @@ document.addEventListener("DOMContentLoaded", function() {
       sessionStorage.removeItem('isLoggedIn');
     });
   }
+
+  // Calculate current week schedule and exam counts dynamically
+  const countScheduleEl = document.getElementById('count-schedule');
+  const countExamEl = document.getElementById('count-exam');
+  
+  if (countScheduleEl && countExamEl) {
+    const today = new Date();
+    
+    const getMonday = (d) => {
+      const date = new Date(d);
+      const day = date.getDay();
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+      return new Date(date.setDate(diff));
+    };
+    
+    const formatISODate = (date) => {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    };
+    
+    const monday = getMonday(today);
+    const daysDates = [];
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date(monday);
+      dayDate.setDate(monday.getDate() + i);
+      daysDates.push(dayDate);
+    }
+    
+    const examSchedule = [
+      { date: '2026-06-10', dayIndex: 2 },
+      { date: '2026-06-15', dayIndex: 0 },
+      { date: '2026-06-23', dayIndex: 1 }
+    ];
+    
+    const classSchedule = [
+      { dayIndex: 0 }, // Thứ 2 sáng: Nguyên lý thống kê
+      { dayIndex: 1 }, // Thứ 3 sáng: Nguyên lý thống kê
+      { dayIndex: 2 }, // Thứ 4 sáng: Thuế (Trực tuyến)
+      { dayIndex: 2 }, // Thứ 4 chiều: Tin học 1
+      { dayIndex: 3 }, // Thứ 5 sáng: Thuế
+      { dayIndex: 3 }, // Thứ 5 chiều: Tin học 1 (Trực tuyến)
+      { dayIndex: 4 }, // Thứ 6 sáng: Thuế
+      { dayIndex: 4 }  // Thứ 6 chiều: Tin học 1 (Trực tuyến)
+    ];
+    
+    let classCount = 0;
+    let examCount = 0;
+    
+    examSchedule.forEach(exam => {
+      const inCurrentWeek = daysDates.some(d => formatISODate(d) === exam.date);
+      if (inCurrentWeek) {
+        examCount++;
+      }
+    });
+    
+    classSchedule.forEach(item => {
+      const targetDayDate = daysDates[item.dayIndex];
+      const isJune2026 = (targetDayDate.getFullYear() === 2026 && targetDayDate.getMonth() === 5);
+      
+      const targetDayISO = formatISODate(targetDayDate);
+      const hasExamOnThisDay = examSchedule.some(exam => exam.date === targetDayISO);
+      
+      if (isJune2026 && !hasExamOnThisDay) {
+        classCount++;
+      }
+    });
+    
+    countScheduleEl.textContent = classCount;
+    countExamEl.textContent = examCount;
+  }
 });
