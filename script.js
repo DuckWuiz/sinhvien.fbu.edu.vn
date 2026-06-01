@@ -175,4 +175,12 @@ document.addEventListener("DOMContentLoaded", function() {
       userDropdownList.classList.remove('show');
     });
   }
+
+  // Logout click handler
+  const logoutBtn = document.getElementById('btn-logout');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function() {
+      sessionStorage.removeItem('isLoggedIn');
+    });
+  }
 });

@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lịch học, lịch thi theo tuần - FBU Portal</title>
+  <script>
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'index.html';
+    }
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,7 +18,7 @@
     <div class="header-container">
       <div class="header-left">
         <div class="logo-container">
-          <a href="index.html" class="logo-img" style="text-decoration: none;">
+          <a href="dashboard.html" class="logo-img" style="text-decoration: none;">
             <img src="sv_logo_dashboard.webp" alt="TRƯỜNG ĐẠI HỌC TÀI CHÍNH - NGÂN HÀNG HÀ NỘI">
           </a>
         </div>
@@ -25,7 +30,7 @@
       </div>
 
       <div class="header-right">
-        <a href="index.html" class="nav-link" id="btn-home">
+        <a href="dashboard.html" class="nav-link" id="btn-home">
           <i data-lucide="home"></i>
           Trang chủ
         </a>
@@ -45,7 +50,7 @@
           <div class="user-dropdown" id="user-dropdown-list">
             <div class="dropdown-item">Thông tin cá nhân</div>
             <div class="dropdown-item">Đổi mật khẩu</div>
-            <a href="login.html" class="dropdown-item" style="text-decoration: none;">Đăng xuất</a>
+            <a href="index.html" class="dropdown-item" id="btn-logout" style="text-decoration: none;">Đăng xuất</a>
           </div>
         </div>
       </div>
@@ -59,7 +64,7 @@
     <aside class="sidebar">
       <ul class="sidebar-menu">
         <li>
-          <a href="index.html" class="sidebar-item">
+          <a href="dashboard.html" class="sidebar-item">
             <span class="sidebar-item-left">
               <i data-lucide="home"></i>
               TRANG CHỦ
@@ -611,6 +616,14 @@
         
         document.addEventListener('click', function() {
           userDropdownList.classList.remove('show');
+        });
+      }
+
+      // Logout handler
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          sessionStorage.removeItem('isLoggedIn');
         });
       }
     });

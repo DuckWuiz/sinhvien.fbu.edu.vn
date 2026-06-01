@@ -1,16 +1,811 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Redirecting to Login…</title>
-    <meta http-equiv="refresh" content="0;url=login.html">
-    <script>
-      // Fallback JS redirect (faster than meta in some browsers)
-      window.location.replace('login.html');
-    </script>
-  </head>
-  <body>
-    Nếu bạn không được chuyển hướng, <a href="login.html">bấm vào đây</a>.
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập hệ thống - FBU Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Custom styling for Login page */
+    body {
+      background-color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header Banner styling matching screenshot */
+    .login-header {
+      background-color: #0063ac;
+      width: 100%;
+      padding: 12px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .login-header-container {
+      max-width: 1200px;
+      width: 100%;
+      padding: 0 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-header img {
+      max-height: 70px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Main responsive layout */
+    .login-container {
+      max-width: 1240px;
+      width: 100%;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1.8fr 1fr;
+      gap: 40px;
+      flex: 1;
+      align-items: start;
+    }
+
+    /* Left Column (Announcements) Styling */
+    .announcements-column {
+      background-color: #ffffff;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .announcement-tabs {
+      display: flex;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #475569;
+      cursor: pointer;
+      text-transform: uppercase;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .tab.active {
+      color: #0063ac;
+      border-bottom-color: #0063ac;
+    }
+
+    .tab:hover:not(.active) {
+      color: #0f172a;
+    }
+
+    .announcement-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .announcement-item {
+      display: flex;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid #f1f5f9;
+      align-items: flex-start;
+    }
+
+    .announcement-item:last-child {
+      border-bottom: none;
+    }
+
+    .date-badge {
+      display: flex;
+      flex-direction: column;
+      width: 68px;
+      height: 68px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      overflow: hidden;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .date-month {
+      background-color: #0063ac;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 3px 0;
+      text-transform: uppercase;
+    }
+
+    .date-day {
+      background-color: #f8fafc;
+      color: #334155;
+      font-size: 24px;
+      font-weight: bold;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .announcement-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .announcement-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #0b4c8c;
+      line-height: 1.4;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .new-badge {
+      background-color: #d9252c;
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: bold;
+      padding: 1px 5px;
+      border-radius: 3px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 6px;
+      line-height: 1.2;
+      font-style: italic;
+    }
+
+    .announcement-desc {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.5;
+      margin: 4px 0 0 0;
+    }
+
+    .btn-view-detail {
+      font-size: 12px;
+      color: #d9252c;
+      text-decoration: none;
+      font-weight: 500;
+      width: fit-content;
+      margin-top: 4px;
+    }
+
+    .btn-view-detail:hover {
+      text-decoration: underline;
+    }
+
+    .view-more-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 15px;
+    }
+
+    .view-more-link {
+      font-size: 13px;
+      font-weight: bold;
+      color: #d9252c;
+      text-decoration: none;
+    }
+
+    .view-more-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Right Column (Login Card) Styling */
+    .login-card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .login-card-header {
+      text-align: center;
+    }
+
+    .portal-title {
+      font-size: 15px;
+      color: #0b4c8c;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      letter-spacing: 0.5px;
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: #0284c7;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-group {
+      width: 100%;
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #1e293b;
+      outline: none;
+      background-color: #ffffff;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-input:focus {
+      border-color: #0063ac;
+      box-shadow: 0 0 0 3px rgba(0, 99, 172, 0.15);
+    }
+
+    /* Captcha grid matching layout */
+    .captcha-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .captcha-input {
+      flex: 1;
+    }
+
+    .btn-refresh {
+      background: none;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #f97316;
+      transition: background-color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .btn-refresh:hover {
+      background-color: #f8fafc;
+    }
+
+    .btn-refresh svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.5px;
+    }
+
+    .captcha-img-box {
+      width: 110px;
+      height: 36px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    /* Buttons colors & custom actions */
+    .btn-submit {
+      background-color: #f95f00; /* Distinct FBU Login Orange */
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .btn-submit:hover {
+      background-color: #ea580c;
+    }
+
+    .parents-login-row {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .btn-parents {
+      background-color: #06b6d4; /* Teal color matching screenshot badge */
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-parents:hover {
+      opacity: 0.9;
+    }
+
+    /* App Download Section */
+    .app-download-section {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-download-title {
+      font-size: 12px;
+      color: #0b4c8c;
+      font-weight: 500;
+    }
+
+    .app-download-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .qr-code-box {
+      border: 1px solid #cbd5e1;
+      padding: 4px;
+      border-radius: 4px;
+      background-color: #ffffff;
+      width: 78px;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-stores-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .store-badge {
+      display: block;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .store-badge:hover {
+      opacity: 0.85;
+    }
+
+    .guide-section {
+      width: 100%;
+    }
+
+    .btn-guide {
+      background-color: #06b6d4; /* Teal color */
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: opacity 0.15s;
+      text-align: center;
+    }
+
+    .btn-guide:hover {
+      opacity: 0.9;
+    }
+
+    /* Error reporting alert box */
+    .error-container {
+      background-color: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 4px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #dc2626;
+      font-size: 12px;
+    }
+
+    .error-container svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Responsive grid breakpoints */
+    @media (max-width: 900px) {
+      .login-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Blue Header containing Centered Logo -->
+  <header class="login-header">
+    <div class="login-header-container">
+      <img src="sv_header_login.webp" alt="TRƯỜNG ĐẠI HỌC TÀI CHÍNH - NGÂN HÀNG HÀ NỘI">
+    </div>
+  </header>
+
+  <!-- Content Grid Section -->
+  <main class="login-container">
+    
+    <!-- Left Column: Tabs and Announcements -->
+    <section class="announcements-column">
+      <div class="announcement-tabs">
+        <div class="tab active">Tân sinh viên</div>
+        <div class="tab">Thông báo</div>
+        <div class="tab">Hướng dẫn</div>
+        <div class="tab">Thông tin</div>
+      </div>
+
+      <div class="announcement-list">
+        <!-- Item 1 -->
+        <div class="announcement-item">
+          <div class="date-badge">
+            <span class="date-month">Tháng 09</span>
+            <span class="date-day">13</span>
+          </div>
+          <div class="announcement-body">
+            <h3 class="announcement-title">
+              THÔNG BÁO DANH SÁCH SINH VIÊN KHÓA 14 ĐỦ ĐIỀU KIỆN Ở KÝ TÚC XÁ NĂM HỌC 2025 – 2026 (ĐỢT 1)
+              <span class="new-badge">new</span>
+            </h3>
+            <a href="#" class="btn-view-detail">Xem chi tiết</a>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="announcement-item">
+          <div class="date-badge">
+            <span class="date-month">Tháng 09</span>
+            <span class="date-day">11</span>
+          </div>
+          <div class="announcement-body">
+            <h3 class="announcement-title">
+              THÔNG BÁO VỀ VIỆC KÊ KHAI THÔNG TIN THAM GIA BHYT ĐỐI VỚI SINH VIÊN KHÓA 14 HỆ ĐẠI HỌC CHÍNH QUY
+              <span class="new-badge">new</span>
+            </h3>
+            <a href="#" class="btn-view-detail">Xem chi tiết</a>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="announcement-item">
+          <div class="date-badge">
+            <span class="date-month">Tháng 09</span>
+            <span class="date-day">11</span>
+          </div>
+          <div class="announcement-body">
+            <h3 class="announcement-title">
+              THÔNG BÁO ĐĂNG KÝ ĐỒNG PHỤC THỂ DỤC VÀ ÁO KHOÁC SINH VIÊN KHÓA 14
+              <span class="new-badge">new</span>
+            </h3>
+            <a href="#" class="btn-view-detail">Xem chi tiết</a>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="announcement-item">
+          <div class="date-badge">
+            <span class="date-month">Tháng 09</span>
+            <span class="date-day">05</span>
+          </div>
+          <div class="announcement-body">
+            <h3 class="announcement-title">
+              THÔNG BÁO ĐĂNG KÝ DỊCH VỤ Ở KÝ TÚC XÁ NĂM HỌC 2025-2026
+            </h3>
+            <p class="announcement-desc">
+              Nhằm đáp ứng nhu cầu chỗ ở và thuận tiện sinh hoạt cho Tân sinh viên K14, trường Đại học Tài chính - Ngân hàng Hà Nội thông báo kế hoạch đăng ký Ký Túc Xá năm 2025
+            </p>
+            <a href="#" class="btn-view-detail">Xem chi tiết</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-more-container">
+        <a href="#" class="view-more-link">XEM THÊM</a>
+      </div>
+    </section>
+
+    <!-- Right Column: Login Form Block -->
+    <section class="login-card">
+      <div class="login-card-header">
+        <h1 class="portal-title">CỔNG THÔNG TIN SINH VIÊN</h1>
+        <h2 class="login-subtitle">ĐĂNG NHẬP HỆ THỐNG</h2>
+      </div>
+
+      <!-- Error box shown when credentials or captcha fails -->
+      <div class="error-container" id="error-alert" style="display: none;">
+        <i data-lucide="alert-circle"></i>
+        <span class="error-text" id="error-message-text">Tên đăng nhập, mật khẩu hoặc mã xác nhận không đúng!</span>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <!-- Student Code -->
+        <div class="form-group">
+          <input type="text" id="username" class="form-input" placeholder="Nhập mã sinh viên" required autocomplete="username">
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <input type="password" id="password" class="form-input" placeholder="Nhập mật khẩu" required autocomplete="current-password">
+        </div>
+
+        <!-- Captcha -->
+        <div class="form-group captcha-row">
+          <input type="text" id="captcha" class="form-input captcha-input" placeholder="Nhập mã" required autocomplete="off">
+          <button type="button" id="btn-refresh-captcha" class="btn-refresh" title="Đổi mã xác nhận">
+            <i data-lucide="rotate-cw"></i>
+          </button>
+          <div class="captcha-img-box">
+            <canvas id="captcha-canvas" width="110" height="36"></canvas>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit">ĐĂNG NHẬP</button>
+      </form>
+
+      <!-- Parent Option Link -->
+      <div class="parents-login-row">
+        <button type="button" class="btn-parents">Dành cho phụ huynh</button>
+      </div>
+
+      <!-- App Download Section -->
+      <div class="app-download-section">
+        <span class="app-download-title">Tải App Mobile sinh viên:</span>
+        <div class="app-download-row">
+          <div class="qr-code-box">
+            <canvas id="qr-canvas" width="70" height="70"></canvas>
+          </div>
+          <div class="app-stores-box">
+            <!-- App Store SVG link -->
+            <a href="#" class="store-badge" title="Tải trên App Store">
+              <svg viewBox="0 0 120 36" style="height: 32px; width: 108px;">
+                <rect width="120" height="36" rx="4" fill="black"/>
+                <path d="M18.5 12.5c.1-1.7 1.4-2.6 1.5-2.6-.9-1.2-2.2-1.4-2.7-1.4-1.2-.1-2.2.6-2.8.6-.6 0-1.5-.6-2.4-.6-1.2 0-2.4.7-3 1.8-1.3 2.2-.4 5.5.9 7.4.6.9 1.3 2 2.4 1.9 1-.1 1.4-.6 2.6-.6 1.2 0 1.5.6 2.6.6 1.1 0 1.7-1 2.3-1.9.7-1.1 1-2.1 1-2.2-.1 0-2-.7-2-2.9zM15.8 7.7c.5-.6.9-1.5.8-2.4-.8 0-1.8.5-2.3 1.1-.4.5-.9 1.4-.8 2.3.9.1 1.7-.4 2.3-1z" fill="white"/>
+                <text x="38" y="14" fill="white" font-family="sans-serif" font-size="8" font-weight="bold">Download on the</text>
+                <text x="38" y="26" fill="white" font-family="sans-serif" font-size="12" font-weight="bold">App Store</text>
+              </svg>
+            </a>
+            <!-- Google Play SVG link -->
+            <a href="#" class="store-badge" title="Tải trên Google Play">
+              <svg viewBox="0 0 120 36" style="height: 32px; width: 108px;">
+                <rect width="120" height="36" rx="4" fill="black"/>
+                <path d="M12 9v18l12-9z" fill="#00e676"/>
+                <path d="M12 9l7 7 5-7z" fill="#00b0ff"/>
+                <path d="M12 27l7-7 5 7z" fill="#ff3d00"/>
+                <path d="M19 16l-7-7v18z" fill="#ffea00"/>
+                <text x="38" y="14" fill="white" font-family="sans-serif" font-size="7" font-weight="bold">GET IT ON</text>
+                <text x="38" y="25" fill="white" font-family="sans-serif" font-size="11" font-weight="bold">Google Play</text>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Guide -->
+      <div class="guide-section">
+        <button type="button" class="btn-guide">Hướng dẫn sử dụng App OneUni</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    // Config login requirements
+    const correctUser = "2352010162";
+    const correctPass = "thu123";
+    const correctCaptcha = "R8KDJ";
+
+    // Draw standard FBU-style captcha
+    function drawCaptcha() {
+      const canvas = document.getElementById('captcha-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      // Clear with clean background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw background noise lines
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 5; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.stroke();
+      }
+      
+      // Draw captcha code "R8KDJ"
+      ctx.font = 'bold 20px "Courier New", Courier, monospace';
+      ctx.textBaseline = 'middle';
+      
+      // Dark blue shades to match FBU theme
+      const colors = ['#0063ac', '#0b4c8c', '#1d4ed8', '#1e40af'];
+      for (let i = 0; i < correctCaptcha.length; i++) {
+        const char = correctCaptcha[i];
+        ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+        
+        ctx.save();
+        const x = 12 + i * 18;
+        const y = canvas.height / 2 + (Math.random() * 6 - 3);
+        const angle = (Math.random() * 20 - 10) * Math.PI / 180;
+        
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.fillText(char, 0, 0);
+        ctx.restore();
+      }
+      
+      // Draw noise overlay curves in blue
+      ctx.strokeStyle = 'rgba(0, 99, 172, 0.4)';
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.bezierCurveTo(
+          Math.random() * canvas.width, Math.random() * canvas.height,
+          Math.random() * canvas.width, Math.random() * canvas.height,
+          Math.random() * canvas.width, Math.random() * canvas.height
+        );
+        ctx.stroke();
+      }
+      
+      // Blue noise dots
+      for (let i = 0; i < 15; i++) {
+        ctx.fillStyle = 'rgba(0, 99, 172, 0.3)';
+        ctx.beginPath();
+        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Generate mock client-side QR Code
+    function drawQRCode() {
+      const canvas = document.getElementById('qr-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size, size);
+      
+      // Draw standard QR pattern grids (three main finder squares)
+      ctx.fillStyle = '#000000';
+      
+      function drawFinder(x, y) {
+        ctx.fillRect(x, y, 18, 18);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x + 2.5, y + 2.5, 13, 13);
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(x + 5, y + 5, 8, 8);
+      }
+      
+      drawFinder(3, 3);
+      drawFinder(size - 21, 3);
+      drawFinder(3, size - 21);
+      
+      // Alignment block bottom-right
+      ctx.fillRect(size - 14, size - 14, 6, 6);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(size - 12, size - 12, 2, 2);
+      
+      // Draw randomized data cells
+      ctx.fillStyle = '#000000';
+      for (let x = 0; x < size; x += 2.5) {
+        for (let y = 0; y < size; y += 2.5) {
+          // Avoid finder squares areas
+          if (x < 24 && y < 24) continue;
+          if (x > size - 24 && y < 24) continue;
+          if (x < 24 && y > size - 24) continue;
+          
+          if (Math.random() > 0.48) {
+            ctx.fillRect(x, y, 2, 2);
+          }
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Create icons
+      lucide.createIcons();
+
+      // Render assets
+      drawCaptcha();
+      drawQRCode();
+
+      // Interactive Tab changing (mock visual action)
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // Refresh captcha redraws the noisy canvas
+      document.getElementById('btn-refresh-captcha').addEventListener('click', () => {
+        drawCaptcha();
+      });
+
+      // Auth validation handler
+      const loginForm = document.getElementById('login-form');
+      const errorAlert = document.getElementById('error-alert');
+
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const userVal = document.getElementById('username').value.trim();
+        const passVal = document.getElementById('password').value;
+        const captchaVal = document.getElementById('captcha').value.trim().toUpperCase();
+
+        if (userVal === correctUser && passVal === correctPass && captchaVal === correctCaptcha) {
+          errorAlert.style.display = 'none';
+          // Set login state
+          sessionStorage.setItem('isLoggedIn', 'true');
+          // Redirect to dashboard
+          window.location.href = "dashboard.html";
+        } else {
+          // Show error message
+          errorAlert.style.display = 'flex';
+          // Re-trigger icon generation in alert box
+          lucide.createIcons();
+          
+          // Clear input fields
+          document.getElementById('password').value = "";
+          document.getElementById('captcha').value = "";
+          // Refresh captcha noise
+          drawCaptcha();
+        }
+      });
+    });
+  </script>
+</body>
 </html>

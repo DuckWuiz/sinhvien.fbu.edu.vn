@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cổng thông tin sinh viên - FBU Portal</title>
+  <script>
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'index.html';
+    }
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -48,7 +53,7 @@
           <div class="user-dropdown" id="user-dropdown-list">
             <div class="dropdown-item">Thông tin cá nhân</div>
             <div class="dropdown-item">Đổi mật khẩu</div>
-            <a href="login.html" class="dropdown-item" style="text-decoration: none;">Đăng xuất</a>
+            <a href="index.html" class="dropdown-item" id="btn-logout" style="text-decoration: none;">Đăng xuất</a>
           </div>
         </div>
       </div>
