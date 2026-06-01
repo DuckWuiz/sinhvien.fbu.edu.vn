@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng thông tin sinh viên - FBU Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <div class="logo-container">
+          <!-- Logo Image -->
+          <div class="logo-img">
+            <img src="sv_logo_dashboard.webp" alt="TRƯỜNG ĐẠI HỌC TÀI CHÍNH - NGÂN HÀNG HÀ NỘI">
+          </div>
+        </div>
+        
+        <!-- Search Input -->
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Tìm kiếm...">
+        </div>
+      </div>
+
+      <!-- Navigation / User Controls -->
+      <div class="header-right">
+        <a href="#" class="nav-link active" id="btn-home">
+          <i data-lucide="home"></i>
+          Trang chủ
+        </a>
+        <a href="#" class="nav-link notification-badge" id="btn-news">
+          <i data-lucide="bell"></i>
+          Tin tức
+          <span class="badge">71</span>
+        </a>
+        <div class="user-profile" id="user-profile-menu">
+          <div class="user-avatar-circle">
+            <i data-lucide="user"></i>
+          </div>
+          <span class="user-name">Trần Thị Hoài Thu</span>
+          <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+          
+          <!-- Dropdown Menu -->
+          <div class="user-dropdown" id="user-dropdown-list">
+            <div class="dropdown-item">Thông tin cá nhân</div>
+            <div class="dropdown-item">Đổi mật khẩu</div>
+            <a href="login.html" class="dropdown-item" style="text-decoration: none;">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Row 1: Student Info and Reminders -->
+    <div class="info-row">
+      <!-- Student Info Card -->
+      <section class="card student-card">
+        <div class="student-avatar-sec">
+          <div class="student-avatar-placeholder">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <a href="#" class="link-detail">Xem chi tiết</a>
+        </div>
+        
+        <div class="student-info-grid">
+          <!-- Column 1 -->
+          <div class="info-item">
+            <span class="info-label">MSSV:</span>
+            <span class="info-value bold">2352010162</span>
+          </div>
+          <!-- Column 2 -->
+          <div class="info-item">
+            <span class="info-label">Lớp học:</span>
+            <span class="info-value bold">D.13.21.06</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Họ tên:</span>
+            <span class="info-value bold">Trần Thị Hoài Thu</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Khóa học:</span>
+            <span class="info-value bold">Khóa 2024</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Giới tính:</span>
+            <span class="info-value">Nữ</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Bậc đào tạo:</span>
+            <span class="info-value">Đại học</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Ngày sinh:</span>
+            <span class="info-value">08/02/2005</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Loại hình đào tạo:</span>
+            <span class="info-value">Chính quy</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Nơi sinh:</span>
+            <span class="info-value">Thái Nguyên</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ngành:</span>
+            <span class="info-value bold" style="color: var(--primary-color);">Tài chính - Ngân hàng</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reminders Column -->
+      <div class="reminders-col">
+        <!-- Main Reminder -->
+        <div class="reminder-card-main">
+          <div class="reminder-content">
+            <span class="reminder-title">Nhắc nhở mới, chưa xem</span>
+            <span class="reminder-value">0</span>
+            <a href="#" class="link-detail">Xem chi tiết</a>
+          </div>
+          <div class="reminder-icon-circle">
+            <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+          </div>
+        </div>
+        
+        <!-- Sub Reminders Grid -->
+        <div class="reminder-bottom-grid">
+          <!-- Weekly Classes -->
+          <div class="sub-reminder-card schedule">
+            <div class="reminder-content">
+              <span class="reminder-title">Lịch học trong tuần</span>
+              <span class="reminder-value">0</span>
+              <a href="lich_theo_tuan.html" class="link-detail" style="color: #0284c7;">Xem chi tiết</a>
+            </div>
+            <div class="reminder-icon-circle">
+              <i data-lucide="calendar-days" style="width: 18px; height: 18px;"></i>
+            </div>
+          </div>
+          <!-- Weekly Exams -->
+          <div class="sub-reminder-card exam">
+            <div class="reminder-content">
+              <span class="reminder-title">Lịch thi trong tuần</span>
+              <span class="reminder-value">0</span>
+              <a href="lich_theo_tuan.html" class="link-detail" style="color: #d97706;">Xem chi tiết</a>
+            </div>
+            <div class="reminder-icon-circle">
+              <i data-lucide="calendar-range" style="width: 18px; height: 18px;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Navigation Grid -->
+    <nav class="quick-nav-grid">
+      <!-- 1 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #3b82f6;">
+          <i data-lucide="user"></i>
+        </div>
+        <span class="nav-card-title">Thông tin sinh viên</span>
+      </div>
+      <!-- 2 -->
+      <a href="ket_qua_hoc_tap.html" class="nav-card" style="text-decoration: none;">
+        <div class="nav-card-icon" style="color: #06b6d4;">
+          <i data-lucide="line-chart"></i>
+        </div>
+        <span class="nav-card-title">Kết quả học tập</span>
+      </a>
+      <!-- 3 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #10b981;">
+          <i data-lucide="layers"></i>
+        </div>
+        <span class="nav-card-title">Đăng ký học phần</span>
+      </div>
+      <!-- 4 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #14b8a6;">
+          <i data-lucide="graduation-cap"></i>
+        </div>
+        <span class="nav-card-title">Đăng ký chuyên ngành</span>
+      </div>
+      <!-- 5 -->
+      <a href="lich_theo_tuan.html" class="nav-card" style="text-decoration: none;">
+        <div class="nav-card-icon" style="color: #6366f1;">
+          <i data-lucide="calendar"></i>
+        </div>
+        <span class="nav-card-title">Lịch theo tuần</span>
+      </a>
+      <!-- 6 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #8b5cf6;">
+          <i data-lucide="calendar-check"></i>
+        </div>
+        <span class="nav-card-title">Lịch theo tiến độ</span>
+      </div>
+      <!-- 7 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #ef4444;">
+          <i data-lucide="dollar-sign"></i>
+        </div>
+        <span class="nav-card-title">Tra cứu công nợ</span>
+      </div>
+      <!-- 8 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #f59e0b;">
+          <i data-lucide="credit-card"></i>
+        </div>
+        <span class="nav-card-title">Thanh toán trực tuyến</span>
+      </div>
+      <!-- 9 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #ec4899;">
+          <i data-lucide="receipt"></i>
+        </div>
+        <span class="nav-card-title">Phiếu thu trực tuyến</span>
+      </div>
+      <!-- 10 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #0ea5e9;">
+          <i data-lucide="file-text"></i>
+        </div>
+        <span class="nav-card-title">Phiếu thu tổng hợp</span>
+      </div>
+      <!-- 11 -->
+      <div class="nav-card">
+        <div class="nav-card-icon" style="color: #10b981;">
+          <i data-lucide="clipboard-edit"></i>
+        </div>
+        <span class="nav-card-title">Đề xuất biểu mẫu</span>
+      </div>
+    </nav>
+
+    <!-- Row 3: Charts and Lists -->
+    <div class="charts-row">
+      
+      <!-- Academic Results Chart -->
+      <section class="card chart-card">
+        <div class="card-title">
+          <span>Kết quả học tập</span>
+          <select class="dropdown-select">
+            <option value="hk2-25-26">HK2 (2025-2026)</option>
+            <option value="hk1-25-26">HK1 (2025-2026)</option>
+            <option value="hk2-24-25">HK2 (2024-25)</option>
+          </select>
+        </div>
+        <div class="chart-container-wrapper">
+          <canvas id="resultsChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Study Progress Circle -->
+      <section class="card chart-card">
+        <div class="card-title">
+          <span>Tiến độ học tập</span>
+        </div>
+        <div class="doughnut-wrapper">
+          <div class="doughnut-chart-box">
+            <canvas id="progressChart"></canvas>
+            <div class="doughnut-inner-text">
+              <span class="doughnut-value">45/134</span>
+              <span class="doughnut-label">Tín chỉ</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Current Semester Classes List -->
+      <section class="card chart-card">
+        <div class="card-title">
+          <span>Lớp học phần</span>
+          <select class="dropdown-select">
+            <option value="hk2-25-26">HK2 (2025-2026)</option>
+            <option value="hk1-25-26">HK1 (2025-2026)</option>
+          </select>
+        </div>
+        
+        <div class="course-list">
+          <div class="course-header">
+            <span>Môn học/học phần</span>
+            <span>Số tín chỉ</span>
+          </div>
+          
+          <!-- Class 1 -->
+          <div class="course-item">
+            <div class="course-info">
+              <span class="course-code">TX.002010</span>
+              <span class="course-name">Nguyên lý thống kê</span>
+            </div>
+            <span class="course-credits">2</span>
+          </div>
+
+          <!-- Class 2 -->
+          <div class="course-item">
+            <div class="course-info">
+              <span class="course-code">DTN020713</span>
+              <span class="course-name">Lý thuyết tài chính tiền tệ</span>
+            </div>
+            <span class="course-credits">3</span>
+          </div>
+
+          <!-- Class 3 -->
+          <div class="course-item">
+            <div class="course-info">
+              <span class="course-code">DQK010506</span>
+              <span class="course-name">Marketing căn bản</span>
+            </div>
+            <span class="course-credits">2</span>
+          </div>
+
+          <!-- Class 4 -->
+          <div class="course-item">
+            <div class="course-info">
+              <span class="course-code">DTN021306</span>
+              <span class="course-name">Tài chính doanh nghiệp 1</span>
+            </div>
+            <span class="course-credits">3</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Script File -->
+  <script src="script.js"></script>
+</body>
+</html>
