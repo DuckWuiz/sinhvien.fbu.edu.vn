@@ -625,15 +625,32 @@ header {
 }
 
 @media (max-width: 768px) {
-  header {
-    flex-wrap: wrap;
+  .header-container {
+    height: auto;
+    padding: 15px 16px;
+    flex-direction: column;
     gap: 12px;
-    justify-content: center;
+    align-items: center;
+  }
+  .header-left {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-container {
+    height: 40px;
   }
   .search-box {
-    order: 3;
     width: 100%;
     margin-left: 0;
+  }
+  .header-right {
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
   }
   .quick-nav-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -1360,4 +1377,50 @@ header {
   background-color: #f8fafc;
   color: #0b4c8c;
   cursor: pointer;
+}
+
+/* Mobile optimizations for schedule filters and calendar navigation */
+@media (max-width: 768px) {
+  .schedule-filters-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+  .filters-left {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .filter-radio-group {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .date-selector-wrapper {
+    width: 100%;
+  }
+  .date-selector-wrapper input[type="text"] {
+    width: 100%;
+  }
+  .filters-right {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .btn-schedule {
+    flex: 1;
+    min-width: 80px;
+    justify-content: center;
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+  .btn-fullscreen {
+    display: none;
+  }
+  .legend-list {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
 }

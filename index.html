@@ -452,11 +452,67 @@
       flex-shrink: 0;
     }
 
-    /* Responsive grid breakpoints */
+    /* Tablet responsive optimizations for Login page */
     @media (max-width: 900px) {
       .login-container {
         grid-template-columns: 1fr;
         gap: 30px;
+      }
+    }
+
+    /* Mobile responsive optimizations for Login page */
+    @media (max-width: 600px) {
+      .login-header-container img {
+        max-width: 95%;
+        max-height: 50px;
+      }
+      .login-container {
+        padding: 0 12px;
+        margin: 15px auto;
+        gap: 20px;
+      }
+      .announcements-column {
+        padding: 16px;
+      }
+      .tab {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      .announcement-item {
+        gap: 12px;
+        padding: 15px 0;
+      }
+      .date-badge {
+        width: 55px;
+        height: 55px;
+      }
+      .date-day {
+        font-size: 18px;
+      }
+      .date-month {
+        font-size: 8px;
+      }
+      .announcement-title {
+        font-size: 12px;
+      }
+      .login-card {
+        padding: 20px 16px;
+      }
+      .captcha-input {
+        width: 100%;
+      }
+      .captcha-row {
+        flex-wrap: wrap;
+      }
+      .app-download-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .app-stores-box {
+        flex-direction: row;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
