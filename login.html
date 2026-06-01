@@ -788,8 +788,8 @@
 
         if (userVal === correctUser && passVal === correctPass && captchaVal === correctCaptcha) {
           errorAlert.style.display = 'none';
-          // Redirect on success
-          window.location.href = "index.html";
+          // Redirect on success to the real home page (avoid index.html redirect loop)
+          window.location.href = "index_home.html";
         } else {
           // Show error message
           errorAlert.style.display = 'flex';
