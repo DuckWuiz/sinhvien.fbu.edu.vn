@@ -255,4 +255,22 @@ document.addEventListener("DOMContentLoaded", function() {
     countScheduleEl.textContent = classCount;
     countExamEl.textContent = examCount;
   }
+
+  // Handle click on unlinked nav cards (div.nav-card)
+  const unlinkedCards = document.querySelectorAll('div.nav-card');
+  unlinkedCards.forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+      window.location.href = 'chua_co_du_lieu.html';
+    });
+  });
+
+  // Handle click on unlinked header controls or other mock links with href="#"
+  const mockLinks = document.querySelectorAll('a[href="#"]');
+  mockLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'chua_co_du_lieu.html';
+    });
+  });
 });

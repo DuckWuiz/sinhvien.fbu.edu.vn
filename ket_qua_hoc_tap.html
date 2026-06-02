@@ -51,8 +51,8 @@
           
           <!-- Dropdown Menu -->
           <div class="user-dropdown" id="user-dropdown-list">
-            <div class="dropdown-item">Thông tin cá nhân</div>
-            <div class="dropdown-item">Đổi mật khẩu</div>
+            <a href="thong_tin_sinh_vien.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Thông tin cá nhân</a>
+            <a href="chua_co_du_lieu.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Đổi mật khẩu</a>
             <a href="index.html" class="dropdown-item" id="btn-logout" style="text-decoration: none;">Đăng xuất</a>
           </div>
         </div>
@@ -1117,6 +1117,15 @@
           sessionStorage.removeItem('isLoggedIn');
         });
       }
+
+      // Handle click on unlinked header controls or other mock links with href="#"
+      const mockLinks = document.querySelectorAll('a[href="#"]');
+      mockLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = 'chua_co_du_lieu.html';
+        });
+      });
     });
   </script>
 </body>
