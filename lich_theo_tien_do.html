@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch học, lịch thi theo tiến độ - FBU Portal</title>
+  <script>
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'index.html';
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Table styles for Progress Schedule */
+    .progress-table-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+    }
+
+    .progress-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      color: var(--text-main);
+      text-align: left;
+    }
+
+    .progress-table th {
+      background-color: #f8fafc;
+      color: #0b4c8c;
+      font-weight: 700;
+      border: 1px solid var(--border-color);
+      padding: 10px 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .progress-table td {
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      vertical-align: middle;
+    }
+
+    .progress-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    /* Highlight class for exams */
+    .progress-table tr.row-exam {
+      background-color: #fefcbf !important; /* Soft yellow matching the screenshot */
+    }
+
+    .progress-table tr.row-exam:hover {
+      background-color: #fef9c3 !important;
+    }
+
+    .center-text {
+      text-align: center;
+    }
+
+    /* Legend block */
+    .legend-container {
+      margin-top: 15px;
+      display: flex;
+      gap: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color-box {
+      width: 24px;
+      height: 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+    }
+
+    .legend-color-box.hoc {
+      background-color: #ffffff;
+    }
+
+    .legend-color-box.thi {
+      background-color: #fefcbf;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <div class="logo-container">
+          <a href="dashboard.html" class="logo-img" style="text-decoration: none;">
+            <img src="sv_logo_dashboard.webp" alt="TRƯỜNG ĐẠI HỌC TÀI CHÍNH - NGÂN HÀNG HÀ NỘI">
+          </a>
+        </div>
+        
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Tìm kiếm...">
+        </div>
+      </div>
+
+      <div class="header-right">
+        <a href="dashboard.html" class="nav-link" id="btn-home">
+          <i data-lucide="home"></i>
+          Trang chủ
+        </a>
+        <a href="#" class="nav-link notification-badge" id="btn-news">
+          <i data-lucide="bell"></i>
+          Tin tức
+          <span class="badge">71</span>
+        </a>
+        <div class="user-profile" id="user-profile-menu">
+          <div class="user-avatar-circle">
+            <i data-lucide="user"></i>
+          </div>
+          <span class="user-name">Trần Thị Hoài Thu</span>
+          <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+          
+          <!-- Dropdown Menu -->
+          <div class="user-dropdown" id="user-dropdown-list">
+            <a href="thong_tin_sinh_vien.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Thông tin cá nhân</a>
+            <a href="chua_co_du_lieu.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Đổi mật khẩu</a>
+            <a href="index.html" class="dropdown-item" id="btn-logout" style="text-decoration: none;">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar Layout Wrapper -->
+  <div class="sidebar-container">
+    
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="home"></i>
+              TRANG CHỦ
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="thong_tin_sinh_vien.html" class="sidebar-item" style="text-decoration: none; color: inherit;">
+            <span class="sidebar-item-left">
+              <i data-lucide="user-check"></i>
+              THÔNG TIN CHUNG
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </a>
+        </li>
+        <li>
+          <div class="sidebar-item active">
+            <span class="sidebar-item-left">
+              <i data-lucide="graduation-cap"></i>
+              HỌC TẬP
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+          <ul class="sidebar-submenu" style="list-style: none; padding-left: 24px; margin-top: 4px; display: block;">
+            <li>
+              <a href="lich_theo_tuan.html" class="sidebar-subitem" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-muted); text-decoration: none; border-radius: 4px;">
+                <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                Lịch theo tuần
+              </a>
+            </li>
+            <li>
+              <a href="lich_theo_tien_do.html" class="sidebar-subitem active" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--primary-color); font-weight: 600; text-decoration: none; border-radius: 4px; background-color: var(--primary-light);">
+                <i data-lucide="calendar-range" style="width: 14px; height: 14px;"></i>
+                Lịch theo tiến độ
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="credit-card"></i>
+              HỌC PHÍ
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="clipboard-edit"></i>
+              ĐĂNG KÝ HỌC PHẦN
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="building"></i>
+              KÝ TÚC XÁ
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="settings"></i>
+              KHÁC
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Right Content Area -->
+    <main class="schedule-content">
+      
+      <!-- Title Header Container -->
+      <div class="results-header-container" style="margin-top: 0; margin-bottom: 0;">
+        <div class="results-title">
+          <i data-lucide="calendar-range" style="color: var(--primary-color);"></i>
+          Lịch học, lịch thi theo tiến độ
+        </div>
+      </div>
+
+      <!-- Filters & Controls Card -->
+      <section class="card schedule-filters-card">
+        
+        <div class="filters-left">
+          <!-- Radio filters -->
+          <div class="filter-radio-group">
+            <label class="filter-radio-label">
+              <input type="radio" name="filter-type" value="all" checked>
+              Tất cả
+            </label>
+            <label class="filter-radio-label">
+              <input type="radio" name="filter-type" value="hoc">
+              Lịch học
+            </label>
+            <label class="filter-radio-label">
+              <input type="radio" name="filter-type" value="thi">
+              Lịch thi
+            </label>
+          </div>
+
+          <!-- Semester Selector -->
+          <div class="semester-selector-wrapper" style="margin-left: 10px;">
+            <select id="select-semester" style="padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; color: var(--text-main); outline: none;">
+              <option value="HK2 (2025-2026)">HK2 (2025-2026)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filters-right">
+          <button class="btn-schedule btn-primary" id="btn-show-schedule">
+            <i data-lucide="calendar-check"></i> Xem lịch
+          </button>
+          <button class="btn-schedule btn-outline" id="btn-print" onclick="window.print()">
+            <i data-lucide="printer"></i> In lịch
+          </button>
+          <button class="btn-fullscreen" id="btn-fullscreen">
+            <i data-lucide="maximize-2"></i>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- Progress Schedule Table Card -->
+      <section class="progress-table-card">
+        <table class="progress-table" id="progress-schedule-table">
+          <thead>
+            <tr>
+              <th rowspan="2" style="width: 40px;">STT</th>
+              <th rowspan="2" style="width: 90px;">Mã học phần</th>
+              <th rowspan="2" style="min-width: 180px;">Tên môn học/học phần</th>
+              <th rowspan="2" style="width: 50px;">Số tín chỉ</th>
+              <th colspan="6">Thông tin lịch</th>
+              <th colspan="2">Thời gian</th>
+              <th rowspan="2" style="width: 80px;">Mã giảng viên</th>
+              <th rowspan="2" style="width: 140px;">Giảng viên</th>
+            </tr>
+            <tr>
+              <th style="width: 40px;">Thứ</th>
+              <th style="width: 60px;">Tiết</th>
+              <th style="width: 80px;">Loại lịch</th>
+              <th style="width: 80px;">Phòng</th>
+              <th style="width: 40px;">Nhóm</th>
+              <th style="width: 50px;">Giờ</th>
+              <th style="width: 85px;">Bắt đầu</th>
+              <th style="width: 85px;">Kết thúc</th>
+            </tr>
+          </thead>
+          <tbody id="progress-schedule-tbody">
+            <!-- Dynamically populated rows -->
+          </tbody>
+        </table>
+
+        <!-- Legend Chú thích màu -->
+        <div class="legend-container">
+          <div class="legend-item">
+            <div class="legend-color-box hoc"></div>
+            <span>Lịch học</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color-box thi"></div>
+            <span>Lịch thi</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Create icons
+      lucide.createIcons();
+      
+      // User profile dropdown toggle
+      const userProfileMenu = document.getElementById('user-profile-menu');
+      const userDropdownList = document.getElementById('user-dropdown-list');
+      
+      if (userProfileMenu && userDropdownList) {
+        userProfileMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          userDropdownList.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function() {
+          userDropdownList.classList.remove('show');
+        });
+      }
+
+      // Logout handler
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          sessionStorage.removeItem('isLoggedIn');
+        });
+      }
+
+      // Click on news notification badge redirects to chua_co_du_lieu.html
+      const btnNews = document.getElementById('btn-news');
+      if (btnNews) {
+        btnNews.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = 'chua_co_du_lieu.html';
+        });
+      }
+
+      // Sidebar click handler (for unlinked sidebar items)
+      const inactiveSidebarItems = document.querySelectorAll('div.sidebar-item:not(.active)');
+      inactiveSidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+          window.location.href = 'chua_co_du_lieu.html';
+        });
+      });
+
+      // Progress Schedule Data (48 items total)
+      // Synchronized with lich_theo_tuan.html for June 2026 classes/exams
+      const progressData = [
+        // 1. Bảo hiểm (DTN0201)
+        { code: 'DTN0201', name: 'Bảo hiểm', credits: 2, day: '3', tiet: '1 - 3', type: 'Lý thuyết', room: 'ZOOM-301', group: '', time: '', start: '29/12/2025', end: '08/03/2026', teacherId: 'TG0331', teacherName: 'TS. Nguyễn Ánh Nguyệt' },
+        { code: 'DTN0201', name: 'Bảo hiểm', credits: 2, day: '4', tiet: '1 - 3', type: 'Lý thuyết', room: 'ZOOM-202', group: '', time: '', start: '29/12/2025', end: '04/01/2026', teacherId: 'TG0331', teacherName: 'TS. Nguyễn Ánh Nguyệt' },
+        { code: 'DTN0201', name: 'Bảo hiểm', credits: 2, day: '6', tiet: '4 - 6', type: 'Lý thuyết', room: 'DVH 703', group: '', time: '', start: '29/12/2025', end: '08/02/2026', teacherId: 'TG0331', teacherName: 'TS. Nguyễn Ánh Nguyệt' },
+        { code: 'DTN0201', name: 'Bảo hiểm', credits: 2, day: '2', tiet: '13 - 15', type: 'Lý thuyết', room: 'ZOOM-203', group: '', time: '', start: '02/02/2026', end: '08/02/2026', teacherId: 'TG0331', teacherName: 'TS. Nguyễn Ánh Nguyệt' },
+        { code: 'DTN0201', name: 'Bảo hiểm', credits: 2, day: '6', tiet: '4 - 6', type: 'Lý thuyết', room: 'ZOOM-401', group: '', time: '', start: '02/03/2026', end: '08/03/2026', teacherId: 'TG0331', teacherName: 'TS. Nguyễn Ánh Nguyệt' },
+        { code: 'DTN0201', name: 'Bảo hiểm', credits: 2, day: '4', tiet: '7 - 9', type: 'Thi cuối kỳ', room: 'DVH 805', group: '1', time: '13h30', start: '18/03/2026', end: '18/03/2026', teacherId: '', teacherName: '' },
+
+        // 2. Lý thuyết tài chính tiền tệ (DTN0207)
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '2', tiet: '10 - 12', type: 'Lý thuyết', room: 'DVH 605', group: '', time: '', start: '29/12/2025', end: '15/03/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '4', tiet: '10 - 12', type: 'Lý thuyết', room: 'DVH 401', group: '', time: '', start: '29/12/2025', end: '25/01/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '6', tiet: '7 - 9', type: 'Lý thuyết', room: 'DVH 801', group: '', time: '', start: '29/12/2025', end: '04/01/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '6', tiet: '7 - 9', type: 'Lý thuyết', room: 'DVH 403', group: '', time: '', start: '05/01/2026', end: '15/03/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '6', tiet: '7 - 9', type: 'Lý thuyết', room: 'DVH 404', group: '', time: '', start: '12/01/2026', end: '25/01/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: 'CN', tiet: '7 - 9', type: 'Lý thuyết', room: 'ZOOM-402', group: '', time: '', start: '12/01/2026', end: '18/01/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '6', tiet: '7 - 9', type: 'Lý thuyết', room: 'ZOOM-202', group: '', time: '', start: '26/01/2026', end: '01/02/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '6', tiet: '7 - 9', type: 'Lý thuyết', room: 'ZOOM-301', group: '', time: '', start: '02/02/2026', end: '08/02/2026', teacherId: '151061', teacherName: 'ThS. Thái Hương Mai' },
+        { code: 'DTN0207', name: 'Lý thuyết tài chính tiền tệ', credits: 3, day: '4', tiet: '4 - 6', type: 'Thi cuối kỳ', room: 'DVH 805', group: '1', time: '9h30', start: '25/03/2026', end: '25/03/2026', teacherId: '', teacherName: '' },
+
+        // 3. Marketing căn bản (DQK0105)
+        { code: 'DQK0105', name: 'Marketing căn bản', credits: 2, day: '2', tiet: '7 - 9', type: 'Lý thuyết', room: 'DVH 703', group: '', time: '', start: '29/12/2025', end: '25/01/2026', teacherId: '161105', teacherName: 'ThS. Nguyễn Ngọc Hưng' },
+        { code: 'DQK0105', name: 'Marketing căn bản', credits: 2, day: '5', tiet: '10 - 12', type: 'Lý thuyết', room: 'ZOOM-401', group: '', time: '', start: '05/01/2026', end: '08/03/2026', teacherId: '161105', teacherName: 'ThS. Nguyễn Ngọc Hưng' },
+        { code: 'DQK0105', name: 'Marketing căn bản', credits: 2, day: '2', tiet: '7 - 9', type: 'Lý thuyết', room: 'DVH 403', group: '', time: '', start: '02/03/2026', end: '15/03/2026', teacherId: '161105', teacherName: 'ThS. Nguyễn Ngọc Hưng' },
+        { code: 'DQK0105', name: 'Marketing căn bản', credits: 2, day: '5', tiet: '10 - 12', type: 'Lý thuyết', room: 'DVH 602', group: '', time: '', start: '09/03/2026', end: '15/03/2026', teacherId: '161105', teacherName: 'ThS. Nguyễn Ngọc Hưng' },
+        { code: 'DQK0105', name: 'Marketing căn bản', credits: 2, day: '6', tiet: '7 - 9', type: 'Thi cuối kỳ', room: 'DVH 802', group: '1', time: '13h30', start: '27/03/2026', end: '27/03/2026', teacherId: '', teacherName: '' },
+
+        // 4. Nguyên lý thống kê (DCB0206) -> ALIGNED WITH lich_theo_tuan.html
+        { code: 'DCB0206', name: 'Nguyên lý thống kê', credits: 2, day: '2', tiet: '1 - 3', type: 'Lý thuyết', room: 'DVH 402', group: '', time: '', start: '06/04/2026', end: '07/06/2026', teacherId: 'TG0017', teacherName: 'ThS. Nguyễn Thị Mai Phương' },
+        { code: 'DCB0206', name: 'Nguyên lý thống kê', credits: 2, day: '3', tiet: '4 - 6', type: 'Lý thuyết', room: 'DVH 402', group: '', time: '', start: '06/04/2026', end: '07/06/2026', teacherId: 'TG0017', teacherName: 'ThS. Nguyễn Thị Mai Phương' }, // Synced to Thứ 3
+        { code: 'DCB0206', name: 'Nguyên lý thống kê', credits: 2, day: '3', tiet: '13 - 15', type: 'Lý thuyết', room: 'ZOOM-203', group: '', time: '', start: '18/05/2026', end: '24/05/2026', teacherId: 'TG0017', teacherName: 'ThS. Nguyễn Thị Mai Phương' },
+        { code: 'DCB0206', name: 'Nguyên lý thống kê', credits: 2, day: '5', tiet: '13 - 15', type: 'Lý thuyết', room: 'ZOOM-202', group: '', time: '', start: '25/05/2026', end: '31/05/2026', teacherId: 'TG0017', teacherName: 'ThS. Nguyễn Thị Mai Phương' },
+        { code: 'DCB0206', name: 'Nguyên lý thống kê', credits: 2, day: '4', tiet: '10 - 12', type: 'Thi cuối kỳ', room: 'DVH 602', group: '1', time: '15h30', start: '10/06/2026', end: '10/06/2026', teacherId: '', teacherName: '' },
+
+        // 5. Quản trị học (DQK0208)
+        { code: 'DQK0208', name: 'Quản trị học', credits: 2, day: '2', tiet: '1 - 3', type: 'Lý thuyết', room: 'DVH 701', group: '', time: '', start: '29/12/2025', end: '15/03/2026', teacherId: '161077,161100', teacherName: 'ThS. Võ Thị Đào, Vũ Hương Ly' },
+        { code: 'DQK0208', name: 'Quản trị học', credits: 2, day: '5', tiet: '4 - 6', type: 'Lý thuyết', room: 'DVH 801', group: '', time: '', start: '05/01/2026', end: '15/03/2026', teacherId: '161077,161100', teacherName: 'ThS. Võ Thị Đào, Vũ Hương Ly' },
+        { code: 'DQK0208', name: 'Quản trị học', credits: 2, day: '5', tiet: '4 - 6', type: 'Lý thuyết', room: 'ZOOM-801', group: '', time: '', start: '19/01/2026', end: '01/02/2026', teacherId: '161077,161100', teacherName: 'ThS. Võ Thị Đào, Vũ Hương Ly' },
+        { code: 'DQK0208', name: 'Quản trị học', credits: 2, day: '2', tiet: '1 - 3', type: 'Lý thuyết', room: 'ZOOM-101', group: '', time: '', start: '26/01/2026', end: '01/02/2026', teacherId: '161077,161100', teacherName: 'ThS. Võ Thị Đào, Vũ Hương Ly' },
+        { code: 'DQK0208', name: 'Quản trị học', credits: 2, day: '6', tiet: '1 - 3', type: 'Thi cuối kỳ', room: 'DVH 805', group: '1', time: '7h30', start: '03/04/2026', end: '03/04/2026', teacherId: '', teacherName: '' },
+
+        // 6. Tài chính doanh nghiệp 1 (DTN0213)
+        { code: 'DTN0213', name: 'Tài chính doanh nghiệp 1', credits: 3, day: '2', tiet: '4 - 6', type: 'Lý thuyết', room: 'DVH 701', group: '', time: '', start: '29/12/2025', end: '15/03/2026', teacherId: '151058', teacherName: 'ThS. Nguyễn Thị Quyên' },
+        { code: 'DTN0213', name: 'Tài chính doanh nghiệp 1', credits: 3, day: '4', tiet: '4 - 6', type: 'Lý thuyết', room: 'DVH 605', group: '', time: '', start: '29/12/2025', end: '25/01/2026', teacherId: '151058', teacherName: 'ThS. Nguyễn Thị Quyên' },
+        { code: 'DTN0213', name: 'Tài chính doanh nghiệp 1', credits: 3, day: '6', tiet: '1 - 3', type: 'Lý thuyết', room: 'DVH 703', group: '', time: '', start: '29/12/2025', end: '15/03/2026', teacherId: '151058', teacherName: 'ThS. Nguyễn Thị Quyên' },
+        { code: 'DTN0213', name: 'Tài chính doanh nghiệp 1', credits: 3, day: '4', tiet: '7 - 9', type: 'Lý thuyết', room: 'DVH 401', group: '', time: '', start: '09/03/2026', end: '15/03/2026', teacherId: '151058', teacherName: 'ThS. Nguyễn Thị Quyên' },
+        { code: 'DTN0213', name: 'Tài chính doanh nghiệp 1', credits: 3, day: '3', tiet: '1 - 3', type: 'Thi cuối kỳ', room: 'DVH 805', group: '1', time: '7h30', start: '24/03/2026', end: '24/03/2026', teacherId: '', teacherName: '' },
+
+        // 7. Tin học 1 (DCB0511) -> ALIGNED WITH lich_theo_tuan.html
+        { code: 'DCB0511', name: 'Tin học 1', credits: 2, day: '5', tiet: '10 - 12', type: 'Thực hành', room: 'ZOOM-202', group: '', time: '', start: '06/04/2026', end: '21/06/2026', teacherId: 'TG0277', teacherName: 'ThS. Trần Trung Kiên' }, // Synced to Thứ 5
+        { code: 'DCB0511', name: 'Tin học 1', credits: 2, day: '4', tiet: '7 - 9', type: 'Thực hành', room: 'DVH PMT 202', group: '', time: '', start: '06/04/2026', end: '21/06/2026', teacherId: 'TG0277', teacherName: 'ThS. Trần Trung Kiên' }, // Synced to Thứ 4
+        { code: 'DCB0511', name: 'Tin học 1', credits: 2, day: '6', tiet: '10 - 12', type: 'Thực hành', room: 'ZOOM-202', group: '', time: '', start: '25/05/2026', end: '31/05/2026', teacherId: 'TG0277', teacherName: 'ThS. Trần Trung Kiên' }, // Synced to Thứ 6
+        { code: 'DCB0511', name: 'Tin học 1', credits: 2, day: '3', tiet: '1 - 3', type: 'Thi cuối kỳ', room: 'DVH 605', group: '1', time: '7h30', start: '23/06/2026', end: '23/06/2026', teacherId: '', teacherName: '' },
+
+        // 8. Thị trường tài chính (DTN0218)
+        { code: 'DTN0218', name: 'Thị trường tài chính', credits: 2, day: '7', tiet: '4 - 6', type: 'Lý thuyết', room: 'ZOOM-701', group: '', time: '', start: '29/12/2025', end: '08/03/2026', teacherId: 'TG0148', teacherName: 'ThS. Lê Thị Hằng Ngân' },
+        { code: 'DTN0218', name: 'Thị trường tài chính', credits: 2, day: '5', tiet: '1 - 3', type: 'Lý thuyết', room: 'ZOOM-801', group: '', time: '', start: '05/01/2026', end: '11/01/2026', teacherId: 'TG0148', teacherName: 'ThS. Lê Thị Hằng Ngân' },
+        { code: 'DTN0218', name: 'Thị trường tài chính', credits: 2, day: '4', tiet: '1 - 3', type: 'Lý thuyết', room: 'DVH 605', group: '', time: '', start: '12/01/2026', end: '15/03/2026', teacherId: 'TG0148', teacherName: 'ThS. Lê Thị Hằng Ngân' },
+        { code: 'DTN0218', name: 'Thị trường tài chính', credits: 2, day: '6', tiet: '4 - 6', type: 'Lý thuyết', room: 'ZOOM-301', group: '', time: '', start: '02/02/2026', end: '08/02/2026', teacherId: 'TG0148', teacherName: 'ThS. Lê Thị Hằng Ngân' },
+        { code: 'DTN0218', name: 'Thị trường tài chính', credits: 2, day: '3', tiet: '1 - 3', type: 'Thi cuối kỳ', room: 'DVH 805', group: '1', time: '7h30', start: '31/03/2026', end: '31/03/2026', teacherId: '', teacherName: '' },
+
+        // 9. Thuế (DTN0219) -> ALIGNED WITH lich_theo_tuan.html
+        { code: 'DTN0219', name: 'Thuế', credits: 2, day: '4', tiet: '4 - 6', type: 'Lý thuyết', room: 'ZOOM-402', group: '', time: '', start: '06/04/2026', end: '14/06/2026', teacherId: '151049,151067', teacherName: 'Nguyễn Thế Bắc, PGS.TS. Nguyễn Thị Liên' }, // Synced to Thứ 4 (Trực tuyến)
+        { code: 'DTN0219', name: 'Thuế', credits: 2, day: '5', tiet: '1 - 3', type: 'Lý thuyết', room: 'DVH 605', group: '', time: '', start: '20/04/2026', end: '14/06/2026', teacherId: '151049,151067', teacherName: 'Nguyễn Thế Bắc, PGS.TS. Nguyễn Thị Liên' }, // Synced to Thứ 5
+        { code: 'DTN0219', name: 'Thuế', credits: 2, day: '6', tiet: '1 - 3', type: 'Lý thuyết', room: 'DVH 605', group: '', time: '', start: '11/05/2026', end: '17/05/2026', teacherId: '151049,151067', teacherName: 'Nguyễn Thế Bắc, PGS.TS. Nguyễn Thị Liên' }, // Synced to Thứ 6
+        { code: 'DTN0219', name: 'Thuế', credits: 2, day: '2', tiet: '4 - 6', type: 'Thi cuối kỳ', room: 'DVH 805', group: '1', time: '9h30', start: '15/06/2026', end: '15/06/2026', teacherId: '', teacherName: '' } // Synced to Thứ 2 15/06
+      ];
+
+      const tbody = document.getElementById('progress-schedule-tbody');
+
+      function renderProgressTable() {
+        const filterVal = document.querySelector('input[name="filter-type"]:checked').value;
+        tbody.innerHTML = '';
+        
+        let index = 1;
+        progressData.forEach(item => {
+          // Apply radio filters
+          if (filterVal === 'hoc' && item.type === 'Thi cuối kỳ') {
+            return;
+          }
+          if (filterVal === 'thi' && item.type !== 'Thi cuối kỳ') {
+            return;
+          }
+
+          const tr = document.createElement('tr');
+          if (item.type === 'Thi cuối kỳ') {
+            tr.className = 'row-exam';
+          }
+
+          tr.innerHTML = `
+            <td class="center-text">${index++}</td>
+            <td class="center-text">${item.code}</td>
+            <td>${item.name}</td>
+            <td class="center-text">${item.credits}</td>
+            <td class="center-text">${item.day}</td>
+            <td class="center-text">${item.tiet}</td>
+            <td class="center-text">${item.type}</td>
+            <td class="center-text">${item.room}</td>
+            <td class="center-text">${item.group}</td>
+            <td class="center-text">${item.time}</td>
+            <td class="center-text">${item.start}</td>
+            <td class="center-text">${item.end}</td>
+            <td class="center-text">${item.teacherId}</td>
+            <td>${item.teacherName}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Initial rendering
+      renderProgressTable();
+
+      // Listeners for filter type change
+      const filterRadios = document.querySelectorAll('input[name="filter-type"]');
+      filterRadios.forEach(radio => {
+        radio.addEventListener('change', renderProgressTable);
+      });
+
+      // View schedule button animation / placeholder action
+      const btnShow = document.getElementById('btn-show-schedule');
+      if (btnShow) {
+        btnShow.addEventListener('click', function() {
+          const card = document.querySelector('.progress-table-card');
+          card.style.opacity = '0.7';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            renderProgressTable();
+          }, 200);
+        });
+      }
+
+      // Fullscreen toggle
+      const btnFullscreen = document.getElementById('btn-fullscreen');
+      if (btnFullscreen) {
+        btnFullscreen.addEventListener('click', function() {
+          const mainArea = document.querySelector('.progress-table-card');
+          if (!document.fullscreenElement) {
+            mainArea.requestFullscreen().catch(err => {
+              console.log(`Error enabling full-screen mode: ${err.message}`);
+            });
+            btnFullscreen.innerHTML = '<i data-lucide="minimize-2"></i>';
+          } else {
+            document.exitFullscreen();
+            btnFullscreen.innerHTML = '<i data-lucide="maximize-2"></i>';
+          }
+          setTimeout(() => lucide.createIcons(), 50);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
