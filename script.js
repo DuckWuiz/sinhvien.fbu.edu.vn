@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const resultsCtx = document.getElementById('resultsChart').getContext('2d');
   
   // Custom values based on the screenshot
-  const myScores = [7.4, 7.4, 7.6, 7.3, 7.2, 7.7];
-  const classAverages = [5.8, 6.3, 6.5, 7.0, 4.2, 4.5];
-  const courseLabels = ['Lớp HP 1', 'Lớp HP 2', 'Lớp HP 3', 'Lớp HP 4', 'Lớp HP 5', 'Lớp HP 6'];
+  const myScores = [7.4, 7.4, 7.6, 7.3, 7.2, 7.7, 7.5, 7.5, 8.5];
+  const classAverages = [5.8, 6.3, 6.5, 7.0, 4.2, 4.5, 5.5, 5.2, 6.0];
+  const courseLabels = ['Lớp HP 1', 'Lớp HP 2', 'Lớp HP 3', 'Lớp HP 4', 'Lớp HP 5', 'Lớp HP 6', 'Lớp HP 7', 'Lớp HP 8', 'Lớp HP 9'];
 
   const resultsChart = new Chart(resultsCtx, {
     type: 'bar',
@@ -107,8 +107,8 @@ document.addEventListener("DOMContentLoaded", function() {
   // Initialize Study Progress Circle (Doughnut Chart)
   const progressCtx = document.getElementById('progressChart').getContext('2d');
   
-  // Total credits = 134, Completed = 45
-  const completedCredits = 45;
+  // Total credits = 134, Completed = 51
+  const completedCredits = 51;
   const totalCredits = 134;
   const remainingCredits = totalCredits - completedCredits;
 
