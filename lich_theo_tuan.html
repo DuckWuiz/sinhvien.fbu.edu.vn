@@ -309,8 +309,8 @@
   
   <!-- Interactive Navigation Script -->
   <script>
-    // Current Monday (default to Monday of the week containing 1/6/2026, which is exactly 2026-06-01)
-    let currentMonday = new Date('2026-06-01');
+    // Current Monday (default to Monday of the week containing start of new schedule: 2026-07-27)
+    let currentMonday = new Date('2026-07-27');
 
     // Regular schedule that repeats weekly (ONLY in June 2026)
     const classSchedule = [
@@ -439,6 +439,160 @@
       return `${yyyy}-${mm}-${dd}`;
     }
 
+    // Get classes for a specific day date dynamically
+    function getClassesForDate(dayDate, dayIndex) {
+      const yyyy = dayDate.getFullYear();
+      const mm = dayDate.getMonth();
+      const dd = dayDate.getDate();
+      
+      // June 2026 (Original schedule)
+      if (yyyy === 2026 && mm === 5) {
+        return classSchedule.filter(item => item.dayIndex === dayIndex).map(item => ({...item, caIndex: item.caIndex}));
+      }
+      
+      // July 27th to October 31st 2026 (New schedule)
+      const startDate = new Date('2026-07-27');
+      const endDate = new Date('2026-10-31');
+      const compareDate = new Date(yyyy, mm, dd);
+      
+      if (compareDate >= startDate && compareDate <= endDate) {
+        const list = [];
+        
+        // Monday (Thứ 2)
+        if (dayIndex === 0) {
+          // 12:30 PM (Tiết 7-9) - Fixed Class
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính quốc tế', code: 'D.13.21.06 - DTN021706',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 802',
+            gv: 'GV: Nguyễn Thế Bắc'
+          });
+          // Evening (17:50 - 20:15) ZOOM-403
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Tài chính doanh nghiệp 1', code: 'D.12.21.HL.01 - DTN021301',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Phan Thị Thảo'
+          });
+        }
+        // Tuesday (Thứ 3)
+        else if (dayIndex === 1) {
+          // Chiều Tiếng Anh 3 ZOOM-701
+          list.push({
+            caIndex: 1, type: 'truc-tuyen', status: 'active',
+            title: 'Tiếng Anh 3', code: 'D.13.21.06 - DCB040806',
+            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: ZOOM-701',
+            gv: 'GV: Trần Trung Kiên'
+          });
+          // Tối Toán cao cấp ZOOM-101
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Toán cao cấp', code: 'D.12.10.HL.01 - DCB051402',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-101',
+            gv: 'GV: Quách Thị Mai Liên'
+          });
+        }
+        // Wednesday (Thứ 4)
+        else if (dayIndex === 2) {
+          // Chiều Tài chính quốc tế DVH 703
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính quốc tế', code: 'D.13.21.06 - DTN021706',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 703',
+            gv: 'GV: Nguyễn Thế Bắc'
+          });
+          // Chiều Tài chính doanh nghiệp 2 DVH 703
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
+            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: DVH 703',
+            gv: 'GV: Nguyễn Thị Quyên'
+          });
+          // Tối Tài chính doanh nghiệp 1 ZOOM-403
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Tài chính doanh nghiệp 1', code: 'D.12.21.HL.01 - DTN021301',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Phan Thị Thảo'
+          });
+        }
+        // Thursday (Thứ 5)
+        else if (dayIndex === 3) {
+          // Chiều Tiếng Anh 3 DVH 801
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tiếng Anh 3', code: 'D.13.21.06 - DCB040806',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 801',
+            gv: 'GV: Trần Trung Kiên'
+          });
+          // Tối Toán cao cấp ZOOM-101
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Toán cao cấp', code: 'D.12.10.HL.01 - DCB051402',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-101',
+            gv: 'GV: Quách Thị Mai Liên'
+          });
+        }
+        // Friday (Thứ 6)
+        else if (dayIndex === 4) {
+          // Chiều Tài chính doanh nghiệp 2 DVH 802
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 802',
+            gv: 'GV: Nguyễn Thị Quyên'
+          });
+          // Tối Tài chính doanh nghiệp 1 ZOOM-403
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Tài chính doanh nghiệp 1', code: 'D.12.21.HL.01 - DTN021301',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Phan Thị Thảo'
+          });
+        }
+        // Saturday (Thứ 7)
+        else if (dayIndex === 5) {
+          // Chiều Tài chính quốc tế DVH 701 (offline!)
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính quốc tế', code: 'D.13.21.06 - DTN021706',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 701',
+            gv: 'GV: Nguyễn Thế Bắc'
+          });
+          // Chiều Tiếng Anh 3 DVH 701 (offline!)
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tiếng Anh 3', code: 'D.13.21.06 - DCB040806',
+            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: DVH 701',
+            gv: 'GV: Trần Trung Kiên'
+          });
+          // Tối Toán cao cấp ZOOM-101 (online stays online!)
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Toán cao cấp', code: 'D.12.10.HL.01 - DCB051402',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-101',
+            gv: 'GV: Quách Thị Mai Liên'
+          });
+        }
+        // Sunday (Chủ nhật)
+        else if (dayIndex === 6) {
+          // August 10th to August 30th
+          const sunStart = new Date('2026-08-10');
+          const sunEnd = new Date('2026-08-30');
+          if (compareDate >= sunStart && compareDate <= sunEnd) {
+            list.push({
+              caIndex: 1, type: 'ly-thuyet', status: 'active',
+              title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
+              tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 803',
+              gv: 'GV: Nguyễn Thị Quyên'
+            });
+          }
+        }
+        return list;
+      }
+      return [];
+    }
+
     // Render the calendar for the week of currentMonday
     function renderWeek() {
       // Update date picker value
@@ -468,41 +622,37 @@
       // Get filter value
       const filterVal = document.querySelector('input[name="filter-type"]:checked').value;
 
-      // Render regular classes (Lịch học)
-      if (filterVal === 'all' || filterVal === 'hoc') {
-        classSchedule.forEach(item => {
-          // Check if this specific dayDate is in June 2026
-          const targetDayDate = daysDates[item.dayIndex];
-          const isJune2026 = (targetDayDate.getFullYear() === 2026 && targetDayDate.getMonth() === 5);
-          
-          // Check if there is an exam on this specific day (skip/exclude regular classes on exam days)
-          const targetDayISO = formatISODate(targetDayDate);
-          const hasExamOnThisDay = examSchedule.some(exam => exam.date === targetDayISO);
-          
-          if (isJune2026 && !hasExamOnThisDay) {
-            const cell = document.querySelector(`.schedule-day-cell[data-day="${item.dayIndex}"][data-ca="${item.caIndex}"]`);
+      // Render regular classes (Lịch học) and exams (Lịch thi)
+      daysDates.forEach((dayDate, dayIndex) => {
+        const targetDayISO = formatISODate(dayDate);
+        
+        // Find exams first for this date
+        let exams = [];
+        if (filterVal === 'all' || filterVal === 'thi') {
+          exams = examSchedule.filter(exam => exam.date === targetDayISO);
+          exams.forEach(exam => {
+            const cell = document.querySelector(`.schedule-day-cell[data-day="${dayIndex}"][data-ca="${exam.caIndex}"]`);
             if (cell) {
-              cell.appendChild(createClassCard(item));
+              cell.appendChild(createExamCard(exam));
             }
-          }
-        });
-      }
-
-      // Render exams (Lịch thi)
-      if (filterVal === 'all' || filterVal === 'thi') {
-        examSchedule.forEach(item => {
-          // Find if the week contains this exam's date
-          const examDateStr = item.date;
-          const foundDayIndex = daysDates.findIndex(d => formatISODate(d) === examDateStr);
+          });
+        }
+        
+        // Find classes for this date
+        if (filterVal === 'all' || filterVal === 'hoc') {
+          const hasExamOnThisDay = exams.length > 0 || examSchedule.some(exam => exam.date === targetDayISO);
           
-          if (foundDayIndex !== -1 && foundDayIndex === item.dayIndex) {
-            const cell = document.querySelector(`.schedule-day-cell[data-day="${item.dayIndex}"][data-ca="${item.caIndex}"]`);
-            if (cell) {
-              cell.appendChild(createExamCard(item));
-            }
+          if (!hasExamOnThisDay) {
+            const classes = getClassesForDate(dayDate, dayIndex);
+            classes.forEach(cls => {
+              const cell = document.querySelector(`.schedule-day-cell[data-day="${dayIndex}"][data-ca="${cls.caIndex}"]`);
+              if (cell) {
+                cell.appendChild(createClassCard(cls));
+              }
+            });
           }
-        });
-      }
+        }
+      });
 
       // Toggle bottom excluded exam table if week contains 23/06/2026 (STT 42 Tin học 1 Exam Date)
       const excludedCard = document.getElementById('excluded-exam-card');
@@ -588,9 +738,15 @@
         renderWeek();
       });
 
-      // Current week button (goes to 2026-06-01, the start of classes in June)
+      // Current week button (goes to start of new schedule: 2026-07-27, or actual week if range matches)
       document.getElementById('btn-current').addEventListener('click', () => {
-        currentMonday = new Date('2026-06-01');
+        const today = new Date();
+        const mondayOfToday = getMonday(today);
+        if (mondayOfToday >= new Date('2026-07-27') && mondayOfToday <= new Date('2026-10-31')) {
+          currentMonday = mondayOfToday;
+        } else {
+          currentMonday = new Date('2026-07-27');
+        }
         document.querySelector('input[name="filter-type"][value="all"]').checked = true;
         renderWeek();
       });

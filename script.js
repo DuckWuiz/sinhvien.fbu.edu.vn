@@ -218,18 +218,67 @@ document.addEventListener("DOMContentLoaded", function() {
       { date: '2026-06-15', dayIndex: 0 },
       { date: '2026-06-23', dayIndex: 1 }
     ];
-    
-    const classSchedule = [
-      { dayIndex: 0 }, // Thứ 2 sáng: Nguyên lý thống kê
-      { dayIndex: 1 }, // Thứ 3 sáng: Nguyên lý thống kê
-      { dayIndex: 2 }, // Thứ 4 sáng: Thuế (Trực tuyến)
-      { dayIndex: 2 }, // Thứ 4 chiều: Tin học 1
-      { dayIndex: 3 }, // Thứ 5 sáng: Thuế
-      { dayIndex: 3 }, // Thứ 5 chiều: Tin học 1 (Trực tuyến)
-      { dayIndex: 4 }, // Thứ 6 sáng: Thuế
-      { dayIndex: 4 }  // Thứ 6 chiều: Tin học 1 (Trực tuyến)
+
+    const juneSchedule = [
+      { dayIndex: 0 },
+      { dayIndex: 1 },
+      { dayIndex: 2 },
+      { dayIndex: 2 },
+      { dayIndex: 3 },
+      { dayIndex: 3 },
+      { dayIndex: 4 },
+      { dayIndex: 4 }
     ];
-    
+
+    function getClassesForDate(dayDate, dayIndex) {
+      const yyyy = dayDate.getFullYear();
+      const mm = dayDate.getMonth();
+      const dd = dayDate.getDate();
+      
+      // June 2026
+      if (yyyy === 2026 && mm === 5) {
+        return juneSchedule.filter(item => item.dayIndex === dayIndex);
+      }
+      
+      // July 27th to October 31st 2026
+      const startDate = new Date('2026-07-27');
+      const endDate = new Date('2026-10-31');
+      const compareDate = new Date(yyyy, mm, dd);
+      
+      if (compareDate >= startDate && compareDate <= endDate) {
+        const list = [];
+        if (dayIndex === 0) {
+          list.push({ title: 'Tài chính quốc tế' });
+          list.push({ title: 'Tài chính doanh nghiệp 1' });
+        } else if (dayIndex === 1) {
+          list.push({ title: 'Tiếng Anh 3' });
+          list.push({ title: 'Toán cao cấp' });
+        } else if (dayIndex === 2) {
+          list.push({ title: 'Tài chính quốc tế' });
+          list.push({ title: 'Tài chính doanh nghiệp 2' });
+          list.push({ title: 'Tài chính doanh nghiệp 1' });
+        } else if (dayIndex === 3) {
+          list.push({ title: 'Tiếng Anh 3' });
+          list.push({ title: 'Toán cao cấp' });
+        } else if (dayIndex === 4) {
+          list.push({ title: 'Tài chính doanh nghiệp 2' });
+          list.push({ title: 'Tài chính doanh nghiệp 1' });
+        } else if (dayIndex === 5) {
+          list.push({ title: 'Tài chính quốc tế' });
+          list.push({ title: 'Tiếng Anh 3' });
+          list.push({ title: 'Toán cao cấp' });
+        } else if (dayIndex === 6) {
+          const sunStart = new Date('2026-08-10');
+          const sunEnd = new Date('2026-08-30');
+          if (compareDate >= sunStart && compareDate <= sunEnd) {
+            list.push({ title: 'Tài chính doanh nghiệp 2' });
+          }
+        }
+        return list;
+      }
+      return [];
+    }
+
     let classCount = 0;
     let examCount = 0;
     
@@ -240,15 +289,13 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
     
-    classSchedule.forEach(item => {
-      const targetDayDate = daysDates[item.dayIndex];
-      const isJune2026 = (targetDayDate.getFullYear() === 2026 && targetDayDate.getMonth() === 5);
-      
-      const targetDayISO = formatISODate(targetDayDate);
+    daysDates.forEach((dayDate, dayIndex) => {
+      const targetDayISO = formatISODate(dayDate);
       const hasExamOnThisDay = examSchedule.some(exam => exam.date === targetDayISO);
       
-      if (isJune2026 && !hasExamOnThisDay) {
-        classCount++;
+      if (!hasExamOnThisDay) {
+        const classes = getClassesForDate(dayDate, dayIndex);
+        classCount += classes.length;
       }
     });
     
