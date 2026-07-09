@@ -241,8 +241,8 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       
       // July 27th to October 31st 2026
-      const startDate = new Date('2026-07-27');
-      const endDate = new Date('2026-10-31');
+      const startDate = new Date(2026, 6, 27);
+      const endDate = new Date(2026, 9, 31);
       const compareDate = new Date(yyyy, mm, dd);
       
       if (compareDate >= startDate && compareDate <= endDate) {
@@ -268,8 +268,8 @@ document.addEventListener("DOMContentLoaded", function() {
           list.push({ title: 'Tiếng Anh 3' });
           list.push({ title: 'Toán cao cấp' });
         } else if (dayIndex === 6) {
-          const sunStart = new Date('2026-08-10');
-          const sunEnd = new Date('2026-08-30');
+          const sunStart = new Date(2026, 7, 10);
+          const sunEnd = new Date(2026, 7, 30);
           if (compareDate >= sunStart && compareDate <= sunEnd) {
             list.push({ title: 'Tài chính doanh nghiệp 2' });
           }
