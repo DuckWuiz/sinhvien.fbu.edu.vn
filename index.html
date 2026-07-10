@@ -697,10 +697,24 @@
     // Config login requirements
     const correctUser = "2352010162";
     const correctPass = "thu123";
-    const correctCaptcha = "R8KDJ";
+
+    // Random captcha generator
+    const CAPTCHA_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let correctCaptcha = "";
+
+    function generateCaptchaCode() {
+      let code = '';
+      for (let i = 0; i < 5; i++) {
+        code += CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)];
+      }
+      return code;
+    }
 
     // Draw standard FBU-style captcha
     function drawCaptcha() {
+      // Generate a new random code each time
+      correctCaptcha = generateCaptchaCode();
+
       const canvas = document.getElementById('captcha-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -719,7 +733,7 @@
         ctx.stroke();
       }
       
-      // Draw captcha code "R8KDJ"
+      // Draw current random captcha code
       ctx.font = 'bold 20px "Courier New", Courier, monospace';
       ctx.textBaseline = 'middle';
       
@@ -826,10 +840,17 @@
         });
       });
 
-      // Refresh captcha redraws the noisy canvas
+      // Refresh captcha redraws the noisy canvas with a new random code
       document.getElementById('btn-refresh-captcha').addEventListener('click', () => {
         drawCaptcha();
+        document.getElementById('captcha').value = "";
       });
+
+      // Auto-refresh captcha every 30 seconds
+      setInterval(() => {
+        drawCaptcha();
+        document.getElementById('captcha').value = "";
+      }, 30000);
 
       // Auth validation handler
       const loginForm = document.getElementById('login-form');
