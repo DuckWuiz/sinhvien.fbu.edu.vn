@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chưa có dữ liệu - FBU Portal</title>
+  <script>
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'index.html';
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Center Card layout custom style */
+    .nodata-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .nodata-card {
+      background-color: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: var(--shadow-md);
+      padding: 40px 30px;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nodata-icon-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: #fef2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444; /* Alert red */
+      margin-bottom: 8px;
+    }
+
+    .nodata-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #dc2626; /* Warning red */
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .btn-back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #0284c7; /* Sky blue */
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background-color 0.15s;
+      margin-top: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-back-home:hover {
+      background-color: #0369a1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <div class="logo-container">
+          <a href="dashboard.html" class="logo-img" style="text-decoration: none;">
+            <img src="sv_logo_dashboard.webp" alt="TRƯỜNG ĐẠI HỌC TÀI CHÍNH - NGÂN HÀNG HÀ NỘI">
+          </a>
+        </div>
+        
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Tìm kiếm...">
+        </div>
+      </div>
+
+      <div class="header-right">
+        <a href="dashboard.html" class="nav-link" id="btn-home">
+          <i data-lucide="home"></i>
+          Trang chủ
+        </a>
+        <a href="#" class="nav-link notification-badge" id="btn-news">
+          <i data-lucide="bell"></i>
+          Tin tức
+          <span class="badge">71</span>
+        </a>
+        <div class="user-profile" id="user-profile-menu">
+          <div class="user-avatar-circle">
+            <i data-lucide="user"></i>
+          </div>
+          <span class="user-name">Trần Thị Hoài Thu</span>
+          <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+          
+          <!-- Dropdown Menu -->
+          <div class="user-dropdown" id="user-dropdown-list">
+            <a href="thong_tin_sinh_vien.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Thông tin cá nhân</a>
+            <a href="chua_co_du_lieu.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Đổi mật khẩu</a>
+            <a href="index.html" class="dropdown-item" id="btn-logout" style="text-decoration: none;">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Center Main Layout Wrapper -->
+  <main class="nodata-content">
+    <div class="nodata-card">
+      <div class="nodata-icon-circle">
+        <i data-lucide="alert-triangle" style="width: 32px; height: 32px;"></i>
+      </div>
+      <p class="nodata-text">Chưa có dữ liệu vui lòng quay lại sau</p>
+      <a href="dashboard.html" class="btn-back-home">
+        <i data-lucide="arrow-left"></i>
+        Quay lại trang chủ
+      </a>
+    </div>
+  </main>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Create icons
+      lucide.createIcons();
+      
+      // User profile dropdown toggle
+      const userProfileMenu = document.getElementById('user-profile-menu');
+      const userDropdownList = document.getElementById('user-dropdown-list');
+      
+      if (userProfileMenu && userDropdownList) {
+        userProfileMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          userDropdownList.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function() {
+          userDropdownList.classList.remove('show');
+        });
+      }
+
+      // Logout handler
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          sessionStorage.removeItem('isLoggedIn');
+        });
+      }
+
+      // Click on news notification badge redirects to chua_co_du_lieu.html
+      const btnNews = document.getElementById('btn-news');
+      if (btnNews) {
+        btnNews.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = 'chua_co_du_lieu.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

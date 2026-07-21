@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phiếu thu trực tuyến - FBU Portal</title>
+  <script>
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'index.html';
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Table styles for Receipts */
+    .receipts-table-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    .receipts-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      color: var(--text-main);
+      text-align: left;
+    }
+
+    .receipts-table th {
+      background-color: #f8fafc;
+      color: #0284c7; /* Sky Blue matching settings */
+      font-weight: 700;
+      border: 1px solid var(--border-color);
+      padding: 12px 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .receipts-table td {
+      border: 1px solid var(--border-color);
+      padding: 12px 10px;
+      vertical-align: middle;
+      text-align: center;
+      color: #475569;
+    }
+
+    .receipts-table td.align-left {
+      text-align: left;
+    }
+
+    .receipts-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    /* Chi tiết button style */
+    .btn-detail-receipt {
+      background-color: #ffffff;
+      color: #0284c7;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-detail-receipt:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    /* Custom Icon Overrides for Status Checks */
+    .icon-pass {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #22c55e !important; /* Green circle */
+      color: #ffffff !important;
+      padding: 0;
+    }
+    .icon-pass svg, .icon-pass i {
+      width: 12px !important;
+      height: 12px !important;
+      stroke-width: 3px !important;
+    }
+    .icon-fail {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #ef4444 !important; /* Red circle */
+      color: #ffffff !important;
+      padding: 0;
+    }
+    .icon-fail svg, .icon-fail i {
+      width: 12px !important;
+      height: 12px !important;
+      stroke-width: 3px !important;
+    }
+
+    /* Premium Detail Modal Styles */
+    .detail-modal-box {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 32px;
+      width: 720px;
+      max-width: 95%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+    
+    .modal-overlay.active .detail-modal-box {
+      transform: translateY(0);
+    }
+    
+    .detail-modal-close-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 32px;
+      height: 32px;
+      background-color: #0284c7;
+      color: #ffffff;
+      border: none;
+      border-top-right-radius: 8px;
+      border-bottom-left-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 20;
+      transition: background-color 0.2s;
+    }
+    
+    .detail-modal-close-btn:hover {
+      background-color: #0369a1;
+    }
+    
+    .modal-table-wrapper {
+      width: 100%;
+      max-height: 320px;
+      overflow-y: auto;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+    }
+    
+    .modal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+    
+    .modal-table th {
+      background-color: #f8fafc;
+      color: #0284c7;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      padding: 10px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .modal-table td {
+      border: 1px solid #cbd5e1;
+      padding: 10px;
+      vertical-align: middle;
+      color: #475569;
+    }
+    
+    .modal-table td.align-center {
+      text-align: center;
+    }
+    
+    .modal-table td.align-left {
+      text-align: left;
+    }
+    
+    .modal-table td.align-right {
+      text-align: right;
+    }
+    
+    .total-row {
+      background-color: #f8fafc;
+      font-weight: 700;
+    }
+    
+    .total-row td {
+      border-top: 2px solid #cbd5e1;
+    }
+    
+    .total-label {
+      text-align: center;
+      color: #0284c7;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    
+    .total-amount {
+      text-align: right;
+      color: #ef4444;
+      font-weight: 700;
+    }
+    
+    .modal-print-container {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+    
+    .btn-print {
+      background-color: #ffffff;
+      color: #1e293b;
+      border: 1px solid #333333;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-print:hover {
+      background-color: #f1f5f9;
+    }
+
+    /* Premium Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(15, 23, 42, 0.6); /* Slate overlay */
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .modal-box {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 32px;
+      width: 480px;
+      max-width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+      text-align: center;
+    }
+    
+    .modal-overlay.active .modal-box {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .modal-header h2 {
+      font-size: 20px;
+      color: #0f172a;
+      margin: 0;
+      font-weight: 700;
+    }
+    
+    .alert-icon {
+      color: #eab308; /* Yellow-500 warning */
+      width: 48px;
+      height: 48px;
+      stroke-width: 1.5;
+    }
+    
+    .modal-body {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    
+    .maintenance-highlight {
+      background-color: #fef9c3; /* Yellow-100 */
+      border-left: 4px solid #eab308;
+      padding: 10px 14px;
+      border-radius: 4px;
+      color: #713f12;
+      font-weight: 500;
+      text-align: left;
+      margin-top: 16px;
+    }
+    
+    .btn-modal-close {
+      background-color: #0b4c8c;
+      color: #ffffff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    
+    .btn-modal-close:hover {
+      background-color: #083c70;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <div class="logo-container">
+          <div class="logo-img">
+            <img src="sv_logo_dashboard.webp" alt="TRƯỜNG ĐẠI HỌC TÀI CHÍNH - NGÂN HÀNG HÀ NỘI">
+          </div>
+        </div>
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Tìm kiếm...">
+        </div>
+      </div>
+
+      <div class="header-right">
+        <a href="dashboard.html" class="nav-link" id="btn-home">
+          <i data-lucide="home"></i>
+          Trang chủ
+        </a>
+        <a href="#" class="nav-link notification-badge" id="btn-news">
+          <i data-lucide="bell"></i>
+          Tin tức
+          <span class="badge">71</span>
+        </a>
+        <div class="user-profile" id="user-profile-menu">
+          <div class="user-avatar-circle">
+            <i data-lucide="user"></i>
+          </div>
+          <span class="user-name">Trần Thị Hoài Thu</span>
+          <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+          
+          <div class="user-dropdown" id="user-dropdown-list">
+            <a href="thong_tin_sinh_vien.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Thông tin cá nhân</a>
+            <a href="chua_co_du_lieu.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Đổi mật khẩu</a>
+            <a href="index.html" class="dropdown-item" id="btn-logout" style="text-decoration: none;">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar Layout Wrapper -->
+  <div class="sidebar-container">
+    
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="home"></i>
+              TRANG CHỦ
+            </span>
+          </a>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="user-check"></i>
+              THÔNG TIN CHUNG
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="graduation-cap"></i>
+              HỌC TẬP
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+          <ul class="sidebar-submenu" style="list-style: none; padding-left: 24px; margin-top: 4px; display: none;">
+            <li>
+              <a href="lich_theo_tuan.html" class="sidebar-subitem" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-muted); text-decoration: none; border-radius: 4px;">
+                <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                Lịch theo tuần
+              </a>
+            </li>
+            <li>
+              <a href="lich_theo_tien_do.html" class="sidebar-subitem" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-muted); text-decoration: none; border-radius: 4px;">
+                <i data-lucide="calendar-range" style="width: 14px; height: 14px;"></i>
+                Lịch theo tiến độ
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="phieu-thu.html" class="sidebar-item active" style="text-decoration: none; color: inherit;">
+            <span class="sidebar-item-left">
+              <i data-lucide="credit-card"></i>
+              HỌC PHÍ
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </a>
+          <ul class="sidebar-submenu" style="list-style: none; padding-left: 24px; margin-top: 4px; display: block;">
+            <li>
+              <a href="phieu-thu.html" class="sidebar-subitem active" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--primary-color); font-weight: 600; text-decoration: none; border-radius: 4px; background-color: var(--primary-light);">
+                <i data-lucide="receipt" style="width: 14px; height: 14px;"></i>
+                Phiếu thu trực tuyến
+              </a>
+            </li>
+            <li>
+              <a href="chua_co_du_lieu.html" class="sidebar-subitem" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-muted); text-decoration: none; border-radius: 4px;">
+                <i data-lucide="file-text" style="width: 14px; height: 14px;"></i>
+                Học phí tổng hợp
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="clipboard-edit"></i>
+              ĐĂNG KÝ HỌC PHẦN
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="building"></i>
+              KÝ TÚC XÁ
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="settings"></i>
+              KHÁC
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Right Content Area -->
+    <main class="schedule-content">
+      
+      <!-- Title Header Container -->
+      <div class="results-header-container" style="margin-top: 0; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="results-title" style="font-size: 20px; font-weight: 700; color: #1e293b;">
+          Phiếu thu
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn-schedule btn-primary" id="btn-settings" style="padding: 8px 12px; background-color: #0284c7; display: inline-flex; align-items: center; gap: 4px; border: none; border-radius: 4px; color: white; cursor: pointer;">
+            <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+            <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+          </button>
+          <button class="btn-schedule btn-primary" id="btn-pay" style="padding: 8px 16px; font-weight: 500; background-color: #0284c7; display: inline-flex; align-items: center; gap: 4px; border: none; border-radius: 4px; color: white; cursor: pointer;">
+            Tiếp tục thanh toán
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid currentColor; margin-left: 2px;">
+              <i data-lucide="chevron-right" style="width: 12px; height: 12px; stroke-width: 3;"></i>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Receipts Table Card -->
+      <section class="receipts-table-card">
+        <table class="receipts-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">STT</th>
+              <th style="width: 250px;">Mã đơn</th>
+              <th style="min-width: 150px;">Nội dung thu</th>
+              <th style="width: 120px;">Số tiền (VNĐ)</th>
+              <th style="width: 180px;">Ngày thanh toán</th>
+              <th style="width: 120px;">Đã thanh toán</th>
+              <th style="width: 150px;">Đã cập nhật công nợ</th>
+              <th style="width: 150px;">Trạng thái giao dịch</th>
+              <th style="width: 100px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr>
+              <td>1</td>
+              <td>9FBUFC21E721F7B</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">17.300.000</td>
+              <td>17/07/2026 21:09:52</td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>Thành công</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="1">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 2 -->
+            <tr>
+              <td>2</td>
+              <td style="word-break: break-all; text-align: left; max-width: 180px;">
+                b78ac8fe78d743358<br>e29f7bcd34d3e4
+              </td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">17.300.000</td>
+              <td>09/07/2026 20:28:37</td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>Giao dịch đã hủy</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="2">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 3 -->
+            <tr>
+              <td>3</td>
+              <td>9FBU48DBA90CA65</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">2.700.000</td>
+              <td>09/04/2026 09:37:01</td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>Thành công</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="3">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 4 -->
+            <tr>
+              <td>4</td>
+              <td>9FBU4A9425DD078</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">7.200.000</td>
+              <td>05/02/2026 11:39:47</td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>Giao dịch đã hủy</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="4">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 5 -->
+            <tr>
+              <td>5</td>
+              <td>9FBUF5C7F1FB5F5</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">14.000.000</td>
+              <td>25/12/2025 11:55:02</td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>Thành công</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="5">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 6 -->
+            <tr>
+              <td>6</td>
+              <td>9FBU99557CA7801</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">6.300.000</td>
+              <td>19/11/2025 10:56:37</td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>Thành công</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="6">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 7 -->
+            <tr>
+              <td>7</td>
+              <td>9FBUE049CFDD678</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">6.300.000</td>
+              <td>13/11/2025 07:33:30</td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>Giao dịch đã hủy</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="7">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 8 -->
+            <tr>
+              <td>8</td>
+              <td>9FBUBAA9A575221</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">10.600.000</td>
+              <td>25/07/2025 19:36:21</td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>
+                <span class="icon-pass"><i data-lucide="check"></i></span>
+              </td>
+              <td>Thành công</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="8">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 9 -->
+            <tr>
+              <td>9</td>
+              <td>9FBU763D167E787</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">10.600.000</td>
+              <td>24/07/2025 12:52:14</td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>Giao dịch đã hủy</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="9">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 10 -->
+            <tr>
+              <td>10</td>
+              <td>9FBU82D792FAA5B</td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">10.600.000</td>
+              <td>24/07/2025 12:50:16</td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>Giao dịch đã hủy</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="10">Chi tiết</button>
+              </td>
+            </tr>
+            <!-- Row 11 -->
+            <tr>
+              <td>11</td>
+              <td style="word-break: break-all; text-align: left; max-width: 180px;">
+                90b355f4d65b434d8<br>e82ff3afb6cf4fd
+              </td>
+              <td>Thu học phí</td>
+              <td style="text-align: right; font-weight: 600;">10.200.000</td>
+              <td>17/06/2025 09:08:35</td>
+              <td>
+                <!-- Rỗng theo hình ảnh -->
+              </td>
+              <td>
+                <span class="icon-fail"><i data-lucide="x"></i></span>
+              </td>
+              <td>Giao dịch đã hủy</td>
+              <td>
+                <button class="btn-detail-receipt" data-row="11">Chi tiết</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Maintenance Modal -->
+  <div id="maintenance-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <i data-lucide="alert-triangle" class="alert-icon"></i>
+        <h2>Hệ Thống Bảo Trì</h2>
+      </div>
+      <div class="modal-body">
+        <p>Cổng thanh toán trực tuyến của Trường Đại học Tài chính - Ngân hàng Hà Nội (FBU) hiện đang được nâng cấp định kỳ.</p>
+        <p class="maintenance-highlight">Trang thanh toán hiện đang bảo trì. Vui lòng quay lại sau hoặc thực hiện giao dịch tại phòng Kế hoạch - Tài chính.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-modal" class="btn-modal-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div id="detail-modal" class="modal-overlay">
+    <div class="detail-modal-box">
+      <button id="btn-close-detail-modal" class="detail-modal-close-btn">
+        <i data-lucide="x" style="width: 14px; height: 14px; stroke-width: 3;"></i>
+      </button>
+      
+      <!-- Modal Content (Table wrapper) -->
+      <div class="modal-table-wrapper">
+        <table class="modal-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">STT</th>
+              <th style="width: 120px;">Mã</th>
+              <th>Nội dung thu</th>
+              <th style="width: 120px;">Học kỳ</th>
+              <th style="width: 150px;">Số tiền (VNĐ)</th>
+            </tr>
+          </thead>
+          <tbody id="detail-modal-body">
+            <!-- Dynamic rows will be inserted here by JS -->
+          </tbody>
+          <tfoot>
+            <tr class="total-row">
+              <td colspan="4" class="total-label">TỔNG:</td>
+              <td id="detail-modal-total" class="total-amount">0</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      
+      <!-- Modal Footer (Print Button) -->
+      <div class="modal-print-container">
+        <button class="btn-print" id="btn-print-receipt">In phiếu thu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Lucide Icons
+      lucide.createIcons();
+
+      // Profile Dropdown Toggle
+      const profileMenu = document.getElementById('user-profile-menu');
+      const dropdownList = document.getElementById('user-dropdown-list');
+      
+      profileMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownList.classList.toggle('active');
+      });
+
+      document.addEventListener('click', () => {
+        dropdownList.classList.remove('active');
+      });
+
+      // Logout handler
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          sessionStorage.removeItem('isLoggedIn');
+        });
+      }
+
+      // Sidebar submenus display on hover/click or toggle
+      const sidebarItemsWithSubmenu = document.querySelectorAll('div.sidebar-item');
+      sidebarItemsWithSubmenu.forEach(item => {
+        item.addEventListener('click', (e) => {
+          const parentLi = item.parentElement;
+          const submenu = parentLi.querySelector('.sidebar-submenu');
+          if (submenu) {
+            e.stopPropagation();
+            const isVisible = submenu.style.display === 'block';
+            submenu.style.display = isVisible ? 'none' : 'block';
+            const chevron = item.querySelector('.sidebar-chevron');
+            if (chevron) {
+              chevron.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+            }
+          } else {
+            window.location.href = 'chua_co_du_lieu.html';
+          }
+        });
+      });
+
+      // Maintenance alert modal logic
+      const payBtn = document.getElementById('btn-pay');
+      const modal = document.getElementById('maintenance-modal');
+      const closeBtn = document.getElementById('btn-close-modal');
+
+      payBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+      });
+
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+
+      // Close modal on click outside modal box
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+
+      // Receipt detail data
+      const receiptDetails = {
+        1: {
+          total: "17.300.000",
+          items: [
+            { code: "DCB030706", name: "Phap luat kinh te", semester: "2026-2027", price: "2.100.000" },
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" },
+            { code: "DKT011806", name: "Ke toan tai chinh 1", semester: "2026-2027", price: "2.100.000" },
+            { code: "DTN020504", name: "Hai quan", semester: "2026-2027", price: "1.400.000" },
+            { code: "DTN021301", name: "Tai chinh doanh nghiep 1", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021706", name: "Tai chinh quoc te", semester: "2026-2027", price: "1.400.000" },
+            { code: "DTN022606", name: "Tai chinh doanh nghiep 2", semester: "2026-2027", price: "2.100.000" }
+          ]
+        },
+        2: {
+          total: "17.300.000",
+          items: [
+            { code: "DCB030706", name: "Phap luat kinh te", semester: "2026-2027", price: "2.100.000" },
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" },
+            { code: "DKT011806", name: "Ke toan tai chinh 1", semester: "2026-2027", price: "2.100.000" },
+            { code: "DTN020504", name: "Hai quan", semester: "2026-2027", price: "1.400.000" },
+            { code: "DTN021301", name: "Tai chinh doanh nghiep 1", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021706", name: "Tai chinh quoc te", semester: "2026-2027", price: "1.400.000" },
+            { code: "DTN022606", name: "Tai chinh doanh nghiep 2", semester: "2026-2027", price: "2.100.000" }
+          ]
+        },
+        3: {
+          total: "2.700.000",
+          items: [
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" }
+          ]
+        },
+        4: {
+          total: "7.200.000",
+          items: [
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DTN020504", name: "Hai quan", semester: "2026-2027", price: "1.400.000" },
+            { code: "DTN021706", name: "Tai chinh quoc te", semester: "2026-2027", price: "1.400.000" },
+            { code: "DTN022606", name: "Tai chinh doanh nghiep 2", semester: "2026-2027", price: "2.100.000" }
+          ]
+        },
+        5: {
+          total: "14.000.000",
+          items: [
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" },
+            { code: "DKT011806", name: "Ke toan tai chinh 1", semester: "2026-2027", price: "2.100.000" },
+            { code: "DTN021301", name: "Tai chinh doanh nghiep 1", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN022606", name: "Tai chinh doanh nghiep 2", semester: "2026-2027", price: "2.100.000" },
+            { code: "DTN021706", name: "Tai chinh quoc te", semester: "2026-2027", price: "1.400.000" }
+          ]
+        },
+        6: {
+          total: "6.300.000",
+          items: [
+            { code: "DCB030706", name: "Phap luat kinh te", semester: "2026-2027", price: "2.100.000" },
+            { code: "DKT011806", name: "Ke toan tai chinh 1", semester: "2026-2027", price: "2.100.000" },
+            { code: "DTN022606", name: "Tai chinh doanh nghiep 2", semester: "2026-2027", price: "2.100.000" }
+          ]
+        },
+        7: {
+          total: "6.300.000",
+          items: [
+            { code: "DCB030706", name: "Phap luat kinh te", semester: "2026-2027", price: "2.100.000" },
+            { code: "DKT011806", name: "Ke toan tai chinh 1", semester: "2026-2027", price: "2.100.000" },
+            { code: "DTN022606", name: "Tai chinh doanh nghiep 2", semester: "2026-2027", price: "2.100.000" }
+          ]
+        },
+        8: {
+          total: "10.600.000",
+          items: [
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021301", name: "Tai chinh doanh nghiep 1", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021706", name: "Tai chinh quoc te", semester: "2026-2027", price: "1.400.000" }
+          ]
+        },
+        9: {
+          total: "10.600.000",
+          items: [
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021301", name: "Tai chinh doanh nghiep 1", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021706", name: "Tai chinh quoc te", semester: "2026-2027", price: "1.400.000" }
+          ]
+        },
+        10: {
+          total: "10.600.000",
+          items: [
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021301", name: "Tai chinh doanh nghiep 1", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021706", name: "Tai chinh quoc te", semester: "2026-2027", price: "1.400.000" }
+          ]
+        },
+        11: {
+          total: "10.200.000",
+          items: [
+            { code: "DCB040806", name: "Tieng Anh 3", semester: "2026-2027", price: "2.800.000" },
+            { code: "DCB051402", name: "Toan cao cap", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN021301", name: "Tai chinh doanh nghiep 1", semester: "2026-2027", price: "2.700.000" },
+            { code: "DTN020504", name: "Hai quan", semester: "2026-2027", price: "1.400.000" }
+          ]
+        }
+      };
+
+      // Detail Modal Elements
+      const detailModal = document.getElementById('detail-modal');
+      const detailModalBody = document.getElementById('detail-modal-body');
+      const detailModalTotal = document.getElementById('detail-modal-total');
+      const closeDetailModalBtn = document.getElementById('btn-close-detail-modal');
+      const printReceiptBtn = document.getElementById('btn-print-receipt');
+
+      // Click event for details buttons
+      document.querySelectorAll('.btn-detail-receipt').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const rowId = e.currentTarget.getAttribute('data-row');
+          const data = receiptDetails[rowId];
+          if (data) {
+            // Populate items
+            detailModalBody.innerHTML = '';
+            data.items.forEach((item, index) => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td class="align-center">${index + 1}</td>
+                <td class="align-center">${item.code}</td>
+                <td class="align-left">${item.name}</td>
+                <td class="align-center">${item.semester}</td>
+                <td class="align-right">${item.price}</td>
+              `;
+              detailModalBody.appendChild(tr);
+            });
+            // Populate total
+            detailModalTotal.textContent = data.total;
+            
+            // Show modal
+            detailModal.classList.add('active');
+          }
+        });
+      });
+
+      // Close detail modal
+      closeDetailModalBtn.addEventListener('click', () => {
+        detailModal.classList.remove('active');
+      });
+
+      detailModal.addEventListener('click', (e) => {
+        if (e.target === detailModal) {
+          detailModal.classList.remove('active');
+        }
+      });
+
+      // Print button handler
+      printReceiptBtn.addEventListener('click', () => {
+        window.print();
+      });
+    });
+  </script>
+</body>
+</html>

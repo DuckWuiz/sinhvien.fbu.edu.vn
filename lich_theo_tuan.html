@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch học, lịch thi theo tuần - FBU Portal</title>
+  <script>
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'index.html';
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <div class="logo-container">
+          <a href="dashboard.html" class="logo-img" style="text-decoration: none;">
+            <img src="sv_logo_dashboard.webp" alt="TRƯỜNG ĐẠI HỌC TÀI CHÍNH - NGÂN HÀNG HÀ NỘI">
+          </a>
+        </div>
+        
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Tìm kiếm...">
+        </div>
+      </div>
+
+      <div class="header-right">
+        <a href="dashboard.html" class="nav-link" id="btn-home">
+          <i data-lucide="home"></i>
+          Trang chủ
+        </a>
+        <a href="#" class="nav-link notification-badge" id="btn-news">
+          <i data-lucide="bell"></i>
+          Tin tức
+          <span class="badge">71</span>
+        </a>
+        <div class="user-profile" id="user-profile-menu">
+          <div class="user-avatar-circle">
+            <i data-lucide="user"></i>
+          </div>
+          <span class="user-name">Trần Thị Hoài Thu</span>
+          <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+          
+          <!-- Dropdown Menu -->
+          <div class="user-dropdown" id="user-dropdown-list">
+            <a href="thong_tin_sinh_vien.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Thông tin cá nhân</a>
+            <a href="chua_co_du_lieu.html" class="dropdown-item" style="text-decoration: none; color: inherit; display: block;">Đổi mật khẩu</a>
+            <a href="index.html" class="dropdown-item" id="btn-logout" style="text-decoration: none;">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar Layout Wrapper -->
+  <div class="sidebar-container">
+    
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="home"></i>
+              TRANG CHỦ
+            </span>
+          </a>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="user-check"></i>
+              THÔNG TIN CHUNG
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item active">
+            <span class="sidebar-item-left">
+              <i data-lucide="graduation-cap"></i>
+              HỌC TẬP
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+          <ul class="sidebar-submenu" style="list-style: none; padding-left: 24px; margin-top: 4px; display: block;">
+            <li>
+              <a href="lich_theo_tuan.html" class="sidebar-subitem active" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--primary-color); font-weight: 600; text-decoration: none; border-radius: 4px; background-color: var(--primary-light);">
+                <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                Lịch theo tuần
+              </a>
+            </li>
+            <li>
+              <a href="lich_theo_tien_do.html" class="sidebar-subitem" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-muted); text-decoration: none; border-radius: 4px;">
+                <i data-lucide="calendar-range" style="width: 14px; height: 14px;"></i>
+                Lịch theo tiến độ
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="phieu-thu.html" class="sidebar-item" style="text-decoration: none; color: inherit;">
+            <span class="sidebar-item-left">
+              <i data-lucide="credit-card"></i>
+              HỌC PHÍ
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </a>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="clipboard-edit"></i>
+              ĐĂNG KÝ HỌC PHẦN
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="building"></i>
+              KÝ TÚC XÁ
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="sidebar-item">
+            <span class="sidebar-item-left">
+              <i data-lucide="settings"></i>
+              KHÁC
+            </span>
+            <i data-lucide="chevron-down" class="sidebar-chevron"></i>
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Right Content Area -->
+    <main class="schedule-content">
+      
+      <!-- Title Header Container -->
+      <div class="results-header-container" style="margin-top: 0; margin-bottom: 0;">
+        <div class="results-title">
+          <i data-lucide="calendar" style="color: var(--primary-color);"></i>
+          Lịch học, lịch thi theo tuần
+        </div>
+      </div>
+
+      <!-- Filters & Controls Card -->
+      <section class="card schedule-filters-card">
+        
+        <div class="filters-left">
+          <!-- Radio filters -->
+          <div class="filter-radio-group">
+            <label class="filter-radio-label">
+              <input type="radio" name="filter-type" value="all" checked>
+              Tất cả
+            </label>
+            <label class="filter-radio-label">
+              <input type="radio" name="filter-type" value="hoc">
+              Lịch học
+            </label>
+            <label class="filter-radio-label">
+              <input type="radio" name="filter-type" value="thi">
+              Lịch thi
+            </label>
+          </div>
+
+          <!-- Date Selector input with hidden native datepicker -->
+          <div class="date-selector-wrapper" style="position: relative;">
+            <input type="text" id="datepicker" value="01/06/2026" readonly style="cursor: pointer;">
+            <i data-lucide="calendar"></i>
+            <input type="date" id="native-datepicker" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+          </div>
+        </div>
+
+        <div class="filters-right">
+          <button class="btn-schedule btn-primary" id="btn-current">
+            <i data-lucide="calendar-check"></i> Hiện tại
+          </button>
+          <button class="btn-schedule btn-outline" id="btn-print">
+            <i data-lucide="printer"></i> In lịch
+          </button>
+          <button class="btn-schedule btn-outline" id="btn-prev">
+            <i data-lucide="chevron-left"></i> Trở về
+          </button>
+          <button class="btn-schedule btn-outline" id="btn-next">
+            Tiếp <i data-lucide="chevron-right"></i>
+          </button>
+          <button class="btn-fullscreen" id="btn-fullscreen">
+            <i data-lucide="maximize-2"></i>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- Calendar Schedule Grid Table Card -->
+      <section class="card schedule-table-card">
+        <table class="schedule-table">
+          <thead>
+            <tr id="calendar-header-row">
+              <th style="width: 80px;">Ca học</th>
+              <th><span class="day-name">Thứ 2</span><span class="day-date">01/06/2026</span></th>
+              <th><span class="day-name">Thứ 3</span><span class="day-date">02/06/2026</span></th>
+              <th><span class="day-name">Thứ 4</span><span class="day-date">03/06/2026</span></th>
+              <th><span class="day-name">Thứ 5</span><span class="day-date">04/06/2026</span></th>
+              <th><span class="day-name">Thứ 6</span><span class="day-date">05/06/2026</span></th>
+              <th><span class="day-name">Thứ 7</span><span class="day-date">06/06/2026</span></th>
+              <th><span class="day-name">Chủ nhật</span><span class="day-date">07/06/2026</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ca-hoc-cell">Sáng</td>
+              <td class="schedule-day-cell" data-day="0" data-ca="0"></td>
+              <td class="schedule-day-cell" data-day="1" data-ca="0"></td>
+              <td class="schedule-day-cell" data-day="2" data-ca="0"></td>
+              <td class="schedule-day-cell" data-day="3" data-ca="0"></td>
+              <td class="schedule-day-cell" data-day="4" data-ca="0"></td>
+              <td class="schedule-day-cell" data-day="5" data-ca="0"></td>
+              <td class="schedule-day-cell" data-day="6" data-ca="0"></td>
+            </tr>
+            <tr>
+              <td class="ca-hoc-cell">Chiều</td>
+              <td class="schedule-day-cell" data-day="0" data-ca="1"></td>
+              <td class="schedule-day-cell" data-day="1" data-ca="1"></td>
+              <td class="schedule-day-cell" data-day="2" data-ca="1"></td>
+              <td class="schedule-day-cell" data-day="3" data-ca="1"></td>
+              <td class="schedule-day-cell" data-day="4" data-ca="1"></td>
+              <td class="schedule-day-cell" data-day="5" data-ca="1"></td>
+              <td class="schedule-day-cell" data-day="6" data-ca="1"></td>
+            </tr>
+            <tr>
+              <td class="ca-hoc-cell">Tối</td>
+              <td class="schedule-day-cell" data-day="0" data-ca="2"></td>
+              <td class="schedule-day-cell" data-day="1" data-ca="2"></td>
+              <td class="schedule-day-cell" data-day="2" data-ca="2"></td>
+              <td class="schedule-day-cell" data-day="3" data-ca="2"></td>
+              <td class="schedule-day-cell" data-day="4" data-ca="2"></td>
+              <td class="schedule-day-cell" data-day="5" data-ca="2"></td>
+              <td class="schedule-day-cell" data-day="6" data-ca="2"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Legend Section Card -->
+      <section class="card schedule-legend-card">
+        <ul class="legend-list">
+          <li class="legend-item">
+            <div class="legend-box box-ly-thuyet"></div>
+            Lịch học lý thuyết
+          </li>
+          <li class="legend-item">
+            <div class="legend-box box-thuc-hanh"></div>
+            Lịch học thực hành
+          </li>
+          <li class="legend-item">
+            <div class="legend-box box-truc-tuyen"></div>
+            Lịch học trực tuyến
+          </li>
+          <li class="legend-item">
+            <div class="legend-box box-lich-thi"></div>
+            Lịch thi
+          </li>
+          <li class="legend-item">
+            <div class="legend-box box-tam-ngung"></div>
+            Lịch tạm ngưng
+          </li>
+        </ul>
+      </section>
+
+      <!-- Excluded Exam Section (Môn học không được dự thi) -->
+      <section class="card excluded-exam-card" id="excluded-exam-card" style="display: none;">
+        <div class="excluded-exam-title">Danh sách môn học, học phần không được dự thi</div>
+        <table class="excluded-exam-table">
+          <thead>
+            <tr>
+              <th style="width: 60px;">STT</th>
+              <th>Mã lớp học phần</th>
+              <th>Tên môn học</th>
+              <th>Tín chỉ</th>
+              <th>Lý do không được dự thi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>DCB051111</td>
+              <td>Tin học 1</td>
+              <td>2</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Interactive Navigation Script -->
+  <script>
+    // Current Monday (default to Monday of the week containing start of new schedule: 2026-07-27)
+    let currentMonday = new Date(2026, 6, 27);
+
+    // Regular schedule that repeats weekly (ONLY in June 2026)
+    const classSchedule = [
+      // Thứ 2 sáng: Nguyên lý thống kê
+      {
+        dayIndex: 0, caIndex: 0, type: 'ly-thuyet', status: 'active',
+        title: 'Nguyên lý thống kê', code: 'D.13.11.05 - DCB020608',
+        tiet: 'Tiết: 1 - 3', gio: 'Giờ: 07:00 - 09:25', phong: 'Phòng: DVH 402',
+        gv: 'GV: Nguyễn Thị Mai Phương'
+      },
+      // Thứ 3 sáng: Nguyên lý thống kê
+      {
+        dayIndex: 1, caIndex: 0, type: 'ly-thuyet', status: 'active',
+        title: 'Nguyên lý thống kê', code: 'D.13.11.05 - DCB020608',
+        tiet: 'Tiết: 4 - 6', gio: 'Giờ: 09:35 - 12:00', phong: 'Phòng: DVH 402',
+        gv: 'GV: Nguyễn Thị Mai Phương'
+      },
+      // Thứ 4 sáng: Thuế (Trực tuyến)
+      {
+        dayIndex: 2, caIndex: 0, type: 'truc-tuyen', status: 'active',
+        title: 'Thuế', code: 'D.13.21.06 - DTN021906',
+        tiet: 'Tiết: 4 - 6', gio: 'Giờ: 09:35 - 12:00', phong: 'Phòng: ZOOM-402',
+        gv: 'GV: Nguyễn Thế Bắc, Nguyễn Thị Liên', hasJoinBtn: true
+      },
+      // Thứ 4 chiều: Tin học 1 (Thực hành/Lý thuyết)
+      {
+        dayIndex: 2, caIndex: 1, type: 'thuc-hanh', status: 'active',
+        title: 'Tin học 1', code: 'D.13.21.06 - DCB051111',
+        tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH PMT 202',
+        gv: 'GV: Trần Trung Kiên'
+      },
+      // Thứ 5 sáng: Thuế
+      {
+        dayIndex: 3, caIndex: 0, type: 'ly-thuyet', status: 'active',
+        title: 'Thuế', code: 'D.13.21.06 - DTN021906',
+        tiet: 'Tiết: 1 - 3', gio: 'Giờ: 07:00 - 09:25', phong: 'Phòng: DVH 605',
+        gv: 'GV: Nguyễn Thế Bắc, Nguyễn Thị Liên'
+      },
+      // Thứ 5 chiều: Tin học 1 (Trực tuyến)
+      {
+        dayIndex: 3, caIndex: 1, type: 'truc-tuyen', status: 'active',
+        title: 'Tin học 1', code: 'D.13.21.06 - DCB051111',
+        tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: ZOOM-202',
+        gv: 'GV: Trần Trung Kiên', hasJoinBtn: true
+      },
+      // Thứ 6 sáng: Thuế
+      {
+        dayIndex: 4, caIndex: 0, type: 'ly-thuyet', status: 'active',
+        title: 'Thuế', code: 'D.13.21.06 - DTN021906',
+        tiet: 'Tiết: 1 - 3', gio: 'Giờ: 07:00 - 09:25', phong: 'Phòng: DVH 605',
+        gv: 'GV: Nguyễn Thế Bắc, Nguyễn Thị Liên'
+      },
+      // Thứ 6 chiều: Tin học 1 (Trực tuyến)
+      {
+        dayIndex: 4, caIndex: 1, type: 'truc-tuyen', status: 'active',
+        title: 'Tin học 1', code: 'D.13.21.06 - DCB051111',
+        tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: ZOOM-202',
+        gv: 'GV: Trần Trung Kiên', hasJoinBtn: true
+      }
+    ];
+
+    // Exam schedule events (ONLY on these specific dates)
+    const examSchedule = [
+      // 10/06/2026: Nguyên lý thống kê
+      {
+        date: '2026-06-10',
+        dayIndex: 2, // Thứ 4
+        caIndex: 1,  // Chiều
+        type: 'lich-thi',
+        title: 'Nguyên lý thống kê',
+        code: 'D.13.11.05 - DCB020608',
+        tiet: 'Tiết: 10 - 12',
+        phong: 'Phòng: DVH 602',
+        caThi: 'Ca thi: 15h30',
+        examDate: 'Ngày ôn thi: 08/06 - 09/06/2026'
+      },
+      // 15/06/2026: Thuế
+      {
+        date: '2026-06-15',
+        dayIndex: 0, // Thứ 2
+        caIndex: 0,  // Sáng
+        type: 'lich-thi',
+        title: 'Thuế',
+        code: 'D.13.21.05 - DTN021905',
+        tiet: 'Tiết: 4 - 6',
+        phong: 'Phòng: DVH 805',
+        caThi: 'Ca thi: 9h30',
+        examDate: 'Ngày ôn thi: 12/06 - 13/06/2026'
+      },
+      // 23/06/2026: Tin học 1
+      {
+        date: '2026-06-23',
+        dayIndex: 1, // Thứ 3
+        caIndex: 0,  // Sáng
+        type: 'lich-thi',
+        title: 'Tin học 1',
+        code: 'D.13.21.06 - DCB051111',
+        tiet: 'Tiết: 1 - 3',
+        phong: 'Phòng: DVH 605',
+        caThi: 'Ca thi: 7h30',
+        examDate: 'Ngày ôn thi: 19/06 - 22/06/2026'
+      }
+    ];
+
+    // Get Monday of the week for any date
+    function getMonday(d) {
+      const date = new Date(d);
+      const day = date.getDay();
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+      return new Date(date.setDate(diff));
+    }
+
+    // Format Date object to DD/MM/YYYY
+    function formatDisplayDate(date) {
+      const dd = String(date.getDate()).padStart(2, '0');
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const yyyy = date.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    // Format Date object to YYYY-MM-DD
+    function formatISODate(date) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    // Get classes for a specific day date dynamically
+    function getClassesForDate(dayDate, dayIndex) {
+      const yyyy = dayDate.getFullYear();
+      const mm = dayDate.getMonth();
+      const dd = dayDate.getDate();
+      
+      // June 2026 (Original schedule)
+      if (yyyy === 2026 && mm === 5) {
+        return classSchedule.filter(item => item.dayIndex === dayIndex).map(item => ({...item, caIndex: item.caIndex}));
+      }
+      
+      // July 27th to October 31st 2026 (New schedule)
+      const startDate = new Date(2026, 6, 27);
+      const endDate = new Date(2026, 9, 31);
+      const compareDate = new Date(yyyy, mm, dd);
+      
+      if (compareDate >= startDate && compareDate <= endDate) {
+        const list = [];
+        
+        // Monday (Thứ 2)
+        if (dayIndex === 0) {
+          // 12:30 PM (Tiết 7-9) - Fixed Class
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính quốc tế', code: 'D.13.21.06 - DTN021706',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 802',
+            gv: 'GV: Nguyễn Thế Bắc'
+          });
+          // Evening (17:50 - 20:15) ZOOM-403
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Tài chính doanh nghiệp 1', code: 'D.12.21.HL.01 - DTN021301',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Phan Thị Thảo'
+          });
+        }
+        // Tuesday (Thứ 3)
+        else if (dayIndex === 1) {
+          // Chiều Tiếng Anh 3 ZOOM-701
+          list.push({
+            caIndex: 1, type: 'truc-tuyen', status: 'active',
+            title: 'Tiếng Anh 3', code: 'D.13.21.06 - DCB040806',
+            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: ZOOM-701',
+            gv: 'GV: Trần Trung Kiên'
+          });
+          // Tối Toán cao cấp ZOOM-101
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Toán cao cấp', code: 'D.12.10.HL.01 - DCB051402',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-101',
+            gv: 'GV: Quách Thị Mai Liên'
+          });
+        }
+        // Wednesday (Thứ 4)
+        else if (dayIndex === 2) {
+          // Chiều Tài chính quốc tế DVH 703
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính quốc tế', code: 'D.13.21.06 - DTN021706',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 703',
+            gv: 'GV: Nguyễn Thế Bắc'
+          });
+          // Chiều Tài chính doanh nghiệp 2 DVH 703
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
+            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: DVH 703',
+            gv: 'GV: Nguyễn Thị Quyên'
+          });
+          // Tối Tài chính doanh nghiệp 1 ZOOM-403
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Tài chính doanh nghiệp 1', code: 'D.12.21.HL.01 - DTN021301',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Phan Thị Thảo'
+          });
+        }
+        // Thursday (Thứ 5)
+        else if (dayIndex === 3) {
+          // Chiều Tiếng Anh 3 DVH 801
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tiếng Anh 3', code: 'D.13.21.06 - DCB040806',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 801',
+            gv: 'GV: Trần Trung Kiên'
+          });
+          // Tối Toán cao cấp ZOOM-101
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Toán cao cấp', code: 'D.12.10.HL.01 - DCB051402',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-101',
+            gv: 'GV: Quách Thị Mai Liên'
+          });
+        }
+        // Friday (Thứ 6)
+        else if (dayIndex === 4) {
+          // Chiều Tài chính doanh nghiệp 2 DVH 802
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 802',
+            gv: 'GV: Nguyễn Thị Quyên'
+          });
+          // Tối Tài chính doanh nghiệp 1 ZOOM-403
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Tài chính doanh nghiệp 1', code: 'D.12.21.HL.01 - DTN021301',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Phan Thị Thảo'
+          });
+        }
+        // Saturday (Thứ 7)
+        else if (dayIndex === 5) {
+          // Chiều Tài chính quốc tế DVH 701 (offline!)
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính quốc tế', code: 'D.13.21.06 - DTN021706',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 701',
+            gv: 'GV: Nguyễn Thế Bắc'
+          });
+          // Chiều Tiếng Anh 3 DVH 701 (offline!)
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tiếng Anh 3', code: 'D.13.21.06 - DCB040806',
+            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: DVH 701',
+            gv: 'GV: Trần Trung Kiên'
+          });
+          // Tối Toán cao cấp ZOOM-101 (online stays online!)
+          list.push({
+            caIndex: 2, type: 'truc-tuyen', status: 'active',
+            title: 'Toán cao cấp', code: 'D.12.10.HL.01 - DCB051402',
+            tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-101',
+            gv: 'GV: Quách Thị Mai Liên'
+          });
+        }
+        // Sunday (Chủ nhật)
+        else if (dayIndex === 6) {
+          // August 10th to August 30th
+          const sunStart = new Date(2026, 7, 10);
+          const sunEnd = new Date(2026, 7, 30);
+          if (compareDate >= sunStart && compareDate <= sunEnd) {
+            list.push({
+              caIndex: 1, type: 'ly-thuyet', status: 'active',
+              title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
+              tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 803',
+              gv: 'GV: Nguyễn Thị Quyên'
+            });
+          }
+        }
+        return list;
+      }
+      return [];
+    }
+
+    // Render the calendar for the week of currentMonday
+    function renderWeek() {
+      // Update date picker value
+      const mondayStr = formatDisplayDate(currentMonday);
+      document.getElementById('datepicker').value = mondayStr;
+      document.getElementById('native-datepicker').value = formatISODate(currentMonday);
+
+      // Update calendar column headers
+      const ths = document.querySelectorAll('#calendar-header-row th');
+      const daysDates = []; // store date of each day in the week
+      for (let i = 1; i <= 7; i++) {
+        const offset = i - 1;
+        const dayDate = new Date(currentMonday);
+        dayDate.setDate(currentMonday.getDate() + offset);
+        daysDates.push(dayDate);
+
+        const dateStr = formatDisplayDate(dayDate);
+        const th = ths[i];
+        const dayName = th.querySelector('.day-name').textContent;
+        th.innerHTML = `<span class="day-name">${dayName}</span><span class="day-date">${dateStr}</span>`;
+      }
+
+      // Clear cell contents
+      const cells = document.querySelectorAll('.schedule-day-cell');
+      cells.forEach(cell => cell.innerHTML = '');
+
+      // Get filter value
+      const filterVal = document.querySelector('input[name="filter-type"]:checked').value;
+
+      // Render regular classes (Lịch học) and exams (Lịch thi)
+      daysDates.forEach((dayDate, dayIndex) => {
+        const targetDayISO = formatISODate(dayDate);
+        
+        // Find exams first for this date
+        let exams = [];
+        if (filterVal === 'all' || filterVal === 'thi') {
+          exams = examSchedule.filter(exam => exam.date === targetDayISO);
+          exams.forEach(exam => {
+            const cell = document.querySelector(`.schedule-day-cell[data-day="${dayIndex}"][data-ca="${exam.caIndex}"]`);
+            if (cell) {
+              cell.appendChild(createExamCard(exam));
+            }
+          });
+        }
+        
+        // Find classes for this date
+        if (filterVal === 'all' || filterVal === 'hoc') {
+          const hasExamOnThisDay = exams.length > 0 || examSchedule.some(exam => exam.date === targetDayISO);
+          
+          if (!hasExamOnThisDay) {
+            const classes = getClassesForDate(dayDate, dayIndex);
+            classes.forEach(cls => {
+              const cell = document.querySelector(`.schedule-day-cell[data-day="${dayIndex}"][data-ca="${cls.caIndex}"]`);
+              if (cell) {
+                cell.appendChild(createClassCard(cls));
+              }
+            });
+          }
+        }
+      });
+
+      // Toggle bottom excluded exam table if week contains 23/06/2026 (STT 42 Tin học 1 Exam Date)
+      const excludedCard = document.getElementById('excluded-exam-card');
+      const hasTinHoc1Exam = daysDates.some(d => formatISODate(d) === '2026-06-23');
+      if (hasTinHoc1Exam) {
+        excludedCard.style.display = 'block';
+      } else {
+        excludedCard.style.display = 'none';
+      }
+
+      // Reinitialize Lucide Icons
+      lucide.createIcons();
+    }
+
+    // Helper to generate HTML for class card
+    function createClassCard(item) {
+      const card = document.createElement('div');
+      card.className = `class-card card-${item.type}`;
+      
+      let html = '';
+      if (item.status === 'suspended') {
+        html += '<div class="ribbon-temp-suspended">Tạm ngưng</div>';
+      }
+      html += `<div class="class-title">${item.title}</div>`;
+      html += `<div class="class-detail">${item.code}</div>`;
+      html += `<div class="class-detail">${item.tiet}</div>`;
+      html += `<div class="class-detail">${item.gio}</div>`;
+      html += `<div class="class-detail">${item.phong}</div>`;
+      html += `<div class="class-detail">${item.gv}</div>`;
+
+      if (item.hasJoinBtn && item.status !== 'suspended') {
+        html += `<button class="class-btn-join"><i data-lucide="video"></i> Tham gia</button>`;
+      }
+
+      card.innerHTML = html;
+      return card;
+    }
+
+    // Helper to generate HTML for exam card
+    function createExamCard(item) {
+      const card = document.createElement('div');
+      card.className = `class-card card-lich-thi`;
+      
+      let html = '';
+      html += `<div class="class-title" style="color: #b45309;">${item.title}</div>`;
+      html += `<div class="class-detail">${item.code}</div>`;
+      html += `<div class="class-detail">${item.tiet}</div>`;
+      html += `<div class="class-detail">${item.phong}</div>`;
+      html += `<div class="class-detail" style="font-weight: bold; color: #b45309;">${item.caThi}</div>`;
+      html += `<div class="class-detail" style="font-style: italic; color: #78350f;">${item.examDate}</div>`;
+
+      card.innerHTML = html;
+      return card;
+    }
+
+    // Navigation and Action handlers
+    document.addEventListener("DOMContentLoaded", function() {
+      lucide.createIcons();
+      
+      renderWeek();
+
+      // Native Date picker handler
+      document.getElementById('native-datepicker').addEventListener('change', (e) => {
+        if (e.target.value) {
+          const selectedDate = new Date(e.target.value);
+          currentMonday = getMonday(selectedDate);
+          autoUpdateFilters(currentMonday);
+          renderWeek();
+        }
+      });
+
+      // Prev week
+      document.getElementById('btn-prev').addEventListener('click', () => {
+        currentMonday.setDate(currentMonday.getDate() - 7);
+        autoUpdateFilters(currentMonday);
+        renderWeek();
+      });
+
+      // Next week
+      document.getElementById('btn-next').addEventListener('click', () => {
+        currentMonday.setDate(currentMonday.getDate() + 7);
+        autoUpdateFilters(currentMonday);
+        renderWeek();
+      });
+
+      // Current week button (goes to start of new schedule: 2026-07-27, or actual week if range matches)
+      document.getElementById('btn-current').addEventListener('click', () => {
+        const today = new Date();
+        const mondayOfToday = getMonday(today);
+        if (mondayOfToday >= new Date(2026, 6, 27) && mondayOfToday <= new Date(2026, 9, 31)) {
+          currentMonday = mondayOfToday;
+        } else {
+          currentMonday = new Date(2026, 6, 27);
+        }
+        document.querySelector('input[name="filter-type"][value="all"]').checked = true;
+        renderWeek();
+      });
+
+      // Filter changes handler
+      const filterRadios = document.querySelectorAll('input[name="filter-type"]');
+      filterRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          renderWeek();
+        });
+      });
+
+      // Interactivity mockups
+      document.getElementById('btn-print').addEventListener('click', () => {
+        window.print();
+      });
+
+      document.getElementById('btn-fullscreen').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            alert(`Không thể phóng to màn hình: ${err.message}`);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      });
+
+      // User profile dropdown toggle
+      const userProfileMenu = document.getElementById('user-profile-menu');
+      const userDropdownList = document.getElementById('user-dropdown-list');
+      
+      if (userProfileMenu && userDropdownList) {
+        userProfileMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          userDropdownList.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function() {
+          userDropdownList.classList.remove('show');
+        });
+      }
+
+      // Logout handler
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          sessionStorage.removeItem('isLoggedIn');
+        });
+      }
+
+      // Handle click on inactive sidebar items
+      const inactiveSidebarItems = document.querySelectorAll('div.sidebar-item:not(.active)');
+      inactiveSidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+          window.location.href = 'chua_co_du_lieu.html';
+        });
+      });
+
+      // Handle click on unlinked header controls or other mock links with href="#"
+      const mockLinks = document.querySelectorAll('a[href="#"]');
+      mockLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = 'chua_co_du_lieu.html';
+        });
+      });
+    });
+
+    // Automatically set filters to match the screenshots based on navigated date
+    function autoUpdateFilters(mondayDate) {
+      document.querySelector('input[name="filter-type"][value="all"]').checked = true;
+    }
+  </script>
+</body>
+</html>
