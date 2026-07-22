@@ -309,8 +309,8 @@
   
   <!-- Interactive Navigation Script -->
   <script>
-    // Current Monday (default to Monday of the week containing start of new schedule: 2026-07-27)
-    let currentMonday = new Date(2026, 6, 27);
+    // Current Monday (default to current week Monday)
+    let currentMonday = getMonday(new Date());
 
     // Regular schedule that repeats weekly (ONLY in June 2026)
     const classSchedule = [
@@ -738,15 +738,9 @@
         renderWeek();
       });
 
-      // Current week button (goes to start of new schedule: 2026-07-27, or actual week if range matches)
+      // Current week button (goes to current week)
       document.getElementById('btn-current').addEventListener('click', () => {
-        const today = new Date();
-        const mondayOfToday = getMonday(today);
-        if (mondayOfToday >= new Date(2026, 6, 27) && mondayOfToday <= new Date(2026, 9, 31)) {
-          currentMonday = mondayOfToday;
-        } else {
-          currentMonday = new Date(2026, 6, 27);
-        }
+        currentMonday = getMonday(new Date());
         document.querySelector('input[name="filter-type"][value="all"]').checked = true;
         renderWeek();
       });

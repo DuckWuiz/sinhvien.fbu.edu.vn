@@ -205,12 +205,23 @@ document.addEventListener("DOMContentLoaded", function() {
       return `${yyyy}-${mm}-${dd}`;
     };
     
-    const monday = getMonday(today);
-    const daysDates = [];
+    // Calculate for Current Week (this week)
+    const mondayThisWeek = getMonday(today);
+    const daysThisWeek = [];
     for (let i = 0; i < 7; i++) {
-      const dayDate = new Date(monday);
-      dayDate.setDate(monday.getDate() + i);
-      daysDates.push(dayDate);
+      const dayDate = new Date(mondayThisWeek);
+      dayDate.setDate(mondayThisWeek.getDate() + i);
+      daysThisWeek.push(dayDate);
+    }
+
+    // Calculate for Next Week
+    const mondayNextWeek = new Date(mondayThisWeek);
+    mondayNextWeek.setDate(mondayThisWeek.getDate() + 7);
+    const daysNextWeek = [];
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date(mondayNextWeek);
+      dayDate.setDate(mondayNextWeek.getDate() + i);
+      daysNextWeek.push(dayDate);
     }
     
     const examSchedule = [
@@ -279,28 +290,57 @@ document.addEventListener("DOMContentLoaded", function() {
       return [];
     }
 
-    let classCount = 0;
-    let examCount = 0;
-    
-    examSchedule.forEach(exam => {
-      const inCurrentWeek = daysDates.some(d => formatISODate(d) === exam.date);
-      if (inCurrentWeek) {
-        examCount++;
-      }
-    });
-    
-    daysDates.forEach((dayDate, dayIndex) => {
+    // Count for This Week
+    let classCountThisWeek = 0;
+    let examCountThisWeek = 0;
+    daysThisWeek.forEach((dayDate, dayIndex) => {
       const targetDayISO = formatISODate(dayDate);
       const hasExamOnThisDay = examSchedule.some(exam => exam.date === targetDayISO);
-      
-      if (!hasExamOnThisDay) {
+      if (hasExamOnThisDay) {
+        examCountThisWeek++;
+      } else {
         const classes = getClassesForDate(dayDate, dayIndex);
-        classCount += classes.length;
+        classCountThisWeek += classes.length;
       }
     });
-    
-    countScheduleEl.textContent = classCount;
-    countExamEl.textContent = examCount;
+
+    // Count for Next Week
+    let classCountNextWeek = 0;
+    let examCountNextWeek = 0;
+    daysNextWeek.forEach((dayDate, dayIndex) => {
+      const targetDayISO = formatISODate(dayDate);
+      const hasExamOnThisDay = examSchedule.some(exam => exam.date === targetDayISO);
+      if (hasExamOnThisDay) {
+        examCountNextWeek++;
+      } else {
+        const classes = getClassesForDate(dayDate, dayIndex);
+        classCountNextWeek += classes.length;
+      }
+    });
+
+    // Display counts on homepage
+    countScheduleEl.textContent = classCountThisWeek;
+    countExamEl.textContent = examCountThisWeek;
+
+    // Show subtext info if next week has schedule
+    const subReminderCard = countScheduleEl.closest('.reminder-content');
+    if (subReminderCard) {
+      let subInfo = subReminderCard.querySelector('.next-week-subinfo');
+      if (!subInfo) {
+        subInfo = document.createElement('span');
+        subInfo.className = 'next-week-subinfo';
+        subInfo.style.fontSize = '11px';
+        subInfo.style.color = '#0284c7';
+        subInfo.style.fontWeight = '500';
+        subInfo.style.marginTop = '2px';
+        subReminderCard.appendChild(subInfo);
+      }
+      if (classCountThisWeek === 0 && classCountNextWeek > 0) {
+        subInfo.textContent = `(Tuần sau: ${classCountNextWeek} buổi học)`;
+      } else if (classCountThisWeek > 0) {
+        subInfo.textContent = '';
+      }
+    }
   }
 
   // Handle click on unlinked nav cards (div.nav-card)
