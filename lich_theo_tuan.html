@@ -574,20 +574,6 @@
             gv: 'GV: Quách Thị Mai Liên'
           });
         }
-        // Sunday (Chủ nhật)
-        else if (dayIndex === 6) {
-          // August 10th to August 30th
-          const sunStart = new Date(2026, 7, 10);
-          const sunEnd = new Date(2026, 7, 30);
-          if (compareDate >= sunStart && compareDate <= sunEnd) {
-            list.push({
-              caIndex: 1, type: 'ly-thuyet', status: 'active',
-              title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
-              tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 803',
-              gv: 'GV: Nguyễn Thị Quyên'
-            });
-          }
-        }
         return list;
       }
       return [];

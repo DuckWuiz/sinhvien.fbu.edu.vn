@@ -278,12 +278,6 @@ document.addEventListener("DOMContentLoaded", function() {
           list.push({ title: 'Tài chính quốc tế' });
           list.push({ title: 'Tiếng Anh 3' });
           list.push({ title: 'Toán cao cấp' });
-        } else if (dayIndex === 6) {
-          const sunStart = new Date(2026, 7, 10);
-          const sunEnd = new Date(2026, 7, 30);
-          if (compareDate >= sunStart && compareDate <= sunEnd) {
-            list.push({ title: 'Tài chính doanh nghiệp 2' });
-          }
         }
         return list;
       }
