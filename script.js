@@ -227,7 +227,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const examSchedule = [
       { date: '2026-06-10', dayIndex: 2 },
       { date: '2026-06-15', dayIndex: 0 },
-      { date: '2026-06-23', dayIndex: 1 }
+      { date: '2026-06-23', dayIndex: 1 },
+      { date: '2026-08-05', dayIndex: 2 },
+      { date: '2026-08-07', dayIndex: 4 }
     ];
 
     const juneSchedule = [
@@ -316,10 +318,10 @@ document.addEventListener("DOMContentLoaded", function() {
     countScheduleEl.textContent = classCountThisWeek;
     countExamEl.textContent = examCountThisWeek;
 
-    // Show subtext info if next week has schedule
-    const subReminderCard = countScheduleEl.closest('.reminder-content');
-    if (subReminderCard) {
-      let subInfo = subReminderCard.querySelector('.next-week-subinfo');
+    // Show subtext info for Lịch học trong tuần (Blue Box)
+    const scheduleCardContent = countScheduleEl.closest('.reminder-content');
+    if (scheduleCardContent) {
+      let subInfo = scheduleCardContent.querySelector('.next-week-subinfo');
       if (!subInfo) {
         subInfo = document.createElement('span');
         subInfo.className = 'next-week-subinfo';
@@ -327,12 +329,32 @@ document.addEventListener("DOMContentLoaded", function() {
         subInfo.style.color = '#0284c7';
         subInfo.style.fontWeight = '500';
         subInfo.style.marginTop = '2px';
-        subReminderCard.appendChild(subInfo);
+        scheduleCardContent.appendChild(subInfo);
       }
       if (classCountThisWeek === 0 && classCountNextWeek > 0) {
         subInfo.textContent = `(Tuần sau: ${classCountNextWeek} buổi học)`;
-      } else if (classCountThisWeek > 0) {
+      } else {
         subInfo.textContent = '';
+      }
+    }
+
+    // Show subtext info for Lịch thi trong tuần (Yellow Box)
+    const examCardContent = countExamEl.closest('.reminder-content');
+    if (examCardContent) {
+      let examSubInfo = examCardContent.querySelector('.next-week-exam-subinfo');
+      if (!examSubInfo) {
+        examSubInfo = document.createElement('span');
+        examSubInfo.className = 'next-week-exam-subinfo';
+        examSubInfo.style.fontSize = '11px';
+        examSubInfo.style.color = '#d97706';
+        examSubInfo.style.fontWeight = '500';
+        examSubInfo.style.marginTop = '2px';
+        examCardContent.appendChild(examSubInfo);
+      }
+      if (examCountThisWeek === 0 && examCountNextWeek > 0) {
+        examSubInfo.textContent = `(Tuần sau: ${examCountNextWeek} lịch thi)`;
+      } else {
+        examSubInfo.textContent = '';
       }
     }
   }
