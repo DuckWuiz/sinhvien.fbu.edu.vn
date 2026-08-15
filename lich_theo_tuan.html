@@ -578,26 +578,36 @@
         }
         // Saturday (Thứ 7)
         else if (dayIndex === 5) {
-          // Chiều Tài chính quốc tế DVH 701 (offline!)
+          // Chiều Tài chính quốc tế (ZOOM-403, GV: Nguyễn Thùy Linh)
           list.push({
-            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            caIndex: 1, type: 'truc-tuyen', status: 'active',
             title: 'Tài chính quốc tế', code: 'D.13.21.06 - DTN021706',
-            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 701',
-            gv: 'GV: Nguyễn Thế Bắc'
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Nguyễn Thùy Linh', hasJoinBtn: true
           });
-          // Chiều Tiếng Anh 3 ZOOM-701 (trực tuyến)
+          // Chiều Tiếng Anh 3 (ZOOM-403, GV: Đoàn Thị Thu Trang)
           list.push({
             caIndex: 1, type: 'truc-tuyen', status: 'active',
             title: 'Tiếng Anh 3', code: 'D.13.21.06 - DCB040806',
-            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: ZOOM-701',
-            gv: 'GV: Trần Trung Kiên', hasJoinBtn: true
+            tiet: 'Tiết: 10 - 12', gio: 'Giờ: 15:05 - 17:30', phong: 'Phòng: ZOOM-403',
+            gv: 'GV: Đoàn Thị Thu Trang', hasJoinBtn: true
           });
-          // Tối Toán cao cấp ZOOM-101 (online stays online!)
+          // Tối Toán cao cấp (ZOOM-101)
           list.push({
             caIndex: 2, type: 'truc-tuyen', status: 'active',
             title: 'Toán cao cấp', code: 'D.12.10.HL.01 - DCB051402',
             tiet: 'Tiết: 13 - 15', gio: 'Giờ: 17:50 - 20:15', phong: 'Phòng: ZOOM-101',
             gv: 'GV: Quách Thị Mai Liên'
+          });
+        }
+        // Sunday (Chủ nhật)
+        else if (dayIndex === 6) {
+          // Chiều Tài chính doanh nghiệp 2 (DVH 803, GV: Bạch Đức Hiển)
+          list.push({
+            caIndex: 1, type: 'ly-thuyet', status: 'active',
+            title: 'Tài chính doanh nghiệp 2', code: 'D.13.21.06 - DTN022606',
+            tiet: 'Tiết: 7 - 9', gio: 'Giờ: 12:30 - 14:55', phong: 'Phòng: DVH 803',
+            gv: 'GV: Bạch Đức Hiển'
           });
         }
         return list;
